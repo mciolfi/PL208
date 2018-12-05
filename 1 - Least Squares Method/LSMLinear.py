@@ -3,18 +3,14 @@ def arq(nome,ndados,tipo):
     import csv
     lista = []
     with open(nome, newline='') as csvfile: # o módulo csv detectará novas linhas automaticamente
-        if tipo == ' ':
-            texto = csv.reader(csvfile, delimiter=' ') # separe por espaço
-        if tipo == ',':
-            texto = csv.reader(csvfile, delimiter=',') # separe por virgula
-        if tipo == '\t':
-            texto = csv.reader(csvfile, delimiter='\t') # separe por tab
+        if tipo == ' ': texto = csv.reader(csvfile, delimiter=' ') # separe por espaço
+        if tipo == ',': texto = csv.reader(csvfile, delimiter=',') # separe por virgula
+        if tipo == '\t': texto = csv.reader(csvfile, delimiter='\t') # separe por tab
         for linha in texto:
             for t in range(len(linha)-ndados):
                 linha.remove('')
             lista.append(linha)
     return (lista)
-
 def LSMlinear():
     #Dados do exercício
     h = [69,67,71,65,72,68,74,65,66,72]
@@ -89,17 +85,11 @@ def LSMlinear():
     plt.ylabel("Tamanho do pé")
     plt.show()    
 def LSM (dados):
-    x = []
-    y = []
-    xt = []
-    matx = []
-    XtX = []
+    x = [] ; y = [] ; xt = [] ; matx = [] ; XtX = [] ; XtY = [] #Definindo variáveis
     for mat in range(len(dados[0])): XtX.append([0]*len(dados[0])) #Definindo tamanho da matriz de multiplicação
-    XtY=[]
     matx.append(1) # Adicionando o Bias
     for a in range(len(dados)-1):
-        for j in range (len(dados)-1):
-            matx.append(dados[a][j])
+        for j in range (len(dados)-1): matx.append(dados[a][j])
         maty = int(dados[a][len(dados)-1])
         x.append(matx)
         y.append(maty)
