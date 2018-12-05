@@ -92,12 +92,18 @@ def LSM (dados):
     x = []
     y = []
     xt = []
-    XtX=[[0]*len(dados[0])]*len(dados[0])
+    matx = []
+    XtX = []
+    for mat in range(len(dados[0])): XtX.append([0]*len(dados[0])) #Definindo tamanho da matriz de multiplicação
     XtY=[]
-    for a in range(len(dados)):
-        mat = (1,int(dados[a][0]),int(dados[a][1]))
-        x.append(mat)
-        y.append(int(dados[a][2]))
+    matx.append(1) # Adicionando o Bias
+    for a in range(len(dados)-1):
+        for j in range (len(dados)-1):
+            matx.append(dados[a][j])
+        maty = int(dados[a][len(dados)-1])
+        x.append(matx)
+        y.append(maty)
+        print ('x,y',x,y)
     #Transpondo a matriz
     for i in range(len(dados[0])):
         linha = []
@@ -111,12 +117,10 @@ def LSM (dados):
             for j in range(len(dados)):
                 soma = soma + x[j][k] * xt[i][j]
             XtX[i][k] = soma
-            print (XtX[0][0])
-            print (i,k,soma)
-    print (XtX)
     for i in range(len(dados[0])):
         soma = 0
         for j in range(len(dados)):
+            print (x[0][0],y[0])
             soma = soma + x[j][i] * y[j]
         XtY.append(soma)
     return (XtX,XtY)
@@ -181,12 +185,28 @@ def matrizinv(x,det): #Faz inversão das matrizes com base no determinante
             linha.append(calc)
         madj.append(linha)
     return(madj)
-dados = arq('Books_attend_grade.dat',3,'\t')
+h = [[69,67,71,65,72,68,74,65,66,72], [9.5,8.5,11.5,10.5,11,7.5,12,7,7.5,13]]
+s = []
+for t in range(len(h)):
+    m = h[0][t],h[1][t]
+    s.append(m)
+dados = s
+#dados = arq('Books_attend_grade.dat',3,'\t')
 xtx,xty = LSM(dados)
-print (xtx,xty)
+print ('XtX =', xtx, 'XtY =',xty)
 det = determinante (xtx)
 if det == 0: print ('Não existe matriz inversa')
 else:
     print ('Matriz inversa possível, determinante = ',det)
-    inv = matrizinv(xtx,det)
-    print (inv)
+    xtxinv = matrizinv(xtx,det)
+    print (xtxinv)
+    beta =  []
+    for t in range(len(xtxinv[0])): beta.append([0]*len(dados[0])) #Definindo tamanho da matriz resultado
+    #Multiplicando matrizes
+    for i in range(len(xtxinv[0])):
+        for k in range(len(xtxinv[0])):
+            soma = 0
+            for j in range(len(xtxinv)):
+                soma = soma + xty[j] * xtxinv[i][j]
+            beta[i][k] = soma
+print (beta)
