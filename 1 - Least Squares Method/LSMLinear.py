@@ -1,16 +1,16 @@
 #Least Squares Method linear
-def arq(nome,ndados,tipo):
-    import csv
-    lista = []
+def arq(nome,ndados,tipo): # Função para captação de dados de arquivos Dataset
+    import csv #Modulo para abertura de arquivo tipo CSV
+    lista = [] #Matriz onde os dados do arquivo serão aplicados
     with open(nome, newline='') as csvfile: # o módulo csv detectará novas linhas automaticamente
         if tipo == ' ': texto = csv.reader(csvfile, delimiter=' ') # separe por espaço
         if tipo == ',': texto = csv.reader(csvfile, delimiter=',') # separe por virgula
         if tipo == '\t': texto = csv.reader(csvfile, delimiter='\t') # separe por tab
         for linha in texto:
-            for t in range(len(linha)-ndados):
-                linha.remove('')
-            lista.append(linha)
-    return (lista)
+            for t in range(len(linha)-ndados): linha.remove('') #Remove dados nulos na matriz
+            lista.append(linha) #Adiciona À matriz lista os dados do arquivo
+    return (lista) #Retorna os dados do arquivo para o programa principal
+
 def LSMlinear():
     #Dados do exercício
     h = [69,67,71,65,72,68,74,65,66,72]
@@ -83,109 +83,141 @@ def LSMlinear():
     plt.grid(True)
     plt.xlabel("Altura")
     plt.ylabel("Tamanho do pé")
-    plt.show()    
+    plt.show()
+    
+# Função para obter valores através do método dos mínimos quadrados
 def LSM (dados):
-    x = [] ; y = [] ; xt = [] ; matx = [] ; XtX = [] ; XtY = [] #Definindo variáveis
-    for mat in range(len(dados[0])): XtX.append([0]*len(dados[0])) #Definindo tamanho da matriz de multiplicação
-    matx.append(1) # Adicionando o Bias
-    for a in range(len(dados)-1):
-        for j in range (len(dados)-1): matx.append(dados[a][j])
-        maty = int(dados[a][len(dados)-1])
-        x.append(matx)
-        y.append(maty)
-        print ('x,y',x,y)
-    #Transpondo a matriz
+    x = []                                                              # Define x como matriz de entrada
+    y = []                                                              # Define y como matriz de saíde
+    xt = []                                                             # Define xT (x transposta) como matriz
+    XtX = []                                                            # Define multiplicação das matrizes xT e x como matriz
+    XtY = []                                                            # Define multiplicação das matrizes xT e y como matriz
+    for mat in range(len(dados[0])): XtX.append([0]*len(dados[0]))      # Define tamanho da matriz de multiplicação
+    for i in range(len(dados)):
+        matx = []                                                       # Define e limpa a matriz x
+        matx.append(1)                                                  # Adiciona o Bias
+        for j in range(len(dados[0])-1): matx.append(dados[i][j])       # Inclui dados x a matriz com Bias
+        maty = dados[i][len(dados[0])-1]                                # Inclui dados y para a matriz a ser multiplicada
+        x.append(matx)                                                  # Atribui valores para matriz x com bias
+        y.append(maty)                                                  # Atribui valores para matriz y
+    # Transpor a matriz X
     for i in range(len(dados[0])):
-        linha = []
-        for j in range(len(dados)):
-            linha.append(x[j][i])
-        xt.append(linha)
-    #Multiplicando matrizes
+        matx = []                                                       # Define e limpa a matriz de entrada de valores de X
+        for j in range(len(dados)): matx.append(x[j][i])                # Transpoe a matriz x
+        xt.append(matx)                                                 # Atribui valores para matriz xT
+    #Multiplica matrizes
     for i in range(len(dados[0])):
         for k in range(len(dados[0])):
-            soma = 0
-            for j in range(len(dados)):
-                soma = soma + x[j][k] * xt[i][j]
-            XtX[i][k] = soma
+            soma = 0                                                    # Define como numérica e limpa a variável soma
+            for j in range(len(dados)): soma = soma + x[j][k] * xt[i][j]# Soma a multiplicação de cada linha por coluna de x por xT
+            XtX[i][k] = soma                                            # Atribiu valores da matriz multiplicação xT.x
     for i in range(len(dados[0])):
-        soma = 0
-        for j in range(len(dados)):
-            print (x[0][0],y[0])
-            soma = soma + x[j][i] * y[j]
-        XtY.append(soma)
+        soma = 0                                                        # Define como numérica e limpa a variável soma
+        for j in range(len(dados)): soma = soma + x[j][i] * y[j]        # Soma a multiplicação de cada linha por coluna de y por xT
+        XtY.append([soma])                                              # Atribiu valores da matriz multiplicação xT.y
     return (XtX,XtY)
+
+# Função de obtenção de determinante da matriz 2x2 ou 3x3
 def determinante(x):
-    #Módulo para obtenção de determinante de matriz 2x2 ou 3x3
-    # Definindo as variáveis
-    a = 0
-    b = 0
-    c = len(x)-1
-    mult1 = 1
-    mult2 = 1
-    loop = 0
-    det = 0
-    soma = []
-    if len(x) == 2: d = len(x)-1 #Matriz 2x2
-    if len(x) == 3: d = len(x)-2 #Matriz 3x3
-    while loop == 0:
-        mult1 = mult1*x[a][b]
-        mult2 = mult2*x[a][c]
-        if a == len(x)-1 and b == d: loop = 1
-        a = a+1
-        b = b+1
-        c = c-1
-        if a > len(x)-1:
-            a = 0
-            soma.append(mult1-mult2)
-            # print (mult1,-mult2) #Apresenta os valores obtidos pela Regra de Sarrus
-            mult1 = 1
-            mult2 = 1
-            b = len(soma)
-            c = len(x)-len(soma)-1
-        if b > len(x)-1: b = 0
-        if c < 0: c = len(x)-1
-    for cont in range(len(soma)): det += soma[cont]
-    return det
-def matrizinv(x,det): #Faz inversão das matrizes com base no determinante
+    i = 0                                                               # Define linha como numérico
+    j = 0                                                               # Define coluna1 como numérico
+    k = len(x)-1                                                        # Define coluna2 como numérico
+    mult1 = 1                                                           # Define multiplicação positiva como numérico
+    mult2 = 1                                                           # Define multiplicação negativa como numérico
+    loop = 0                                                            # Define finalização do ciclo de cálculo como numérico
+    det = 0                                                             # Define determinante como numérico
+    soma = []                                                           # Define a matriz de soma para a Regra de Sarrus
+    if len(x) == 2: d = len(x)-1                                        # Confirma se a matriz é 2x2
+    if len(x) == 3: d = len(x)-2                                        # Verifica se a matriz é 3x3
+    while loop == 0:                                                    # Inicia o ciclo de multiplicação
+        mult1 = mult1 * x[i][j]                                         # Multiplica valores positivos
+        mult2 = mult2 * x[i][k]                                         # Multiplica valores negativos
+        if i == len(x)-1 and j == d: loop = 1                           # Encerra o ciclo de calculo
+        i = i + 1                                                       # Aumenta o valor da linha
+        j = j + 1                                                       # Aumenta o valor da coluna1
+        k = k - 1                                                       # Reduz o valor da coluna2
+        if i > len(x)-1:                                                # Se o valor da linha for maior que o tamanho da matriz -1
+            i = 0                                                       # Zera o valor da linha
+            soma.append(mult1-mult2)                                    # Adiciona a matriz soma os valores obtidos pela Regra de Sarrus 
+            mult1 = 1; mult2 = 1                                        # Retorna as variáveis de multiplicação ao estado inicial
+            j = len(soma)                                               # Define a coluna1 com o tamanho da matriz soma
+            k = len(x)-len(soma)-1                                      # Define a coluna2 como a diferença dos tamanhos das matrizes
+        if j > len(x)-1: j = 0                                          # Retorna a variável para o estado inicial
+        if k < 0: k = len(x)-1                                          # Retorna a variável para o estado inicial
+    for loop in range(len(soma)): det += soma[loop]                     # Atribui valores ao determinante
+    return det                                                          # Retorna com o valor do determinante
+
+def matrizinv(dados,det): #Faz inversão das matrizes com base no determinante
     #Definindo variáveis
     xt = []
     madj = []
-    #Transpondo a matriz
-    for i in range(len(x)):
-        linha = []
-        for j in range(len(x)):
-            linha.append(x[j][i])
-        xt.append(linha)
-    #Obtendo a matriz adjunta atraves o determinante das matrizes menores 2x2, aplicando o sinal e 1/det
-    for i in range(len(x)):
-        if i == 0: a = 1
-        else: a = 0
-        if i == 2: b = 1
-        else: b = 2
-        linha = []
-        for j in range(len(x)):
-            if j == 0: c = 1
-            else: c = 0
-            if j == 2: d = 1
-            else: d = 2
-            #Adiciona os sinais conforme posição na matriz
-            if (i+j)%2 == 0: calc = (xt[a][c]*xt[b][d]-xt[a][d]*xt[b][c])/int(det)
-            else: calc = -(xt[a][c]*xt[b][d]-xt[a][d]*xt[b][c])/int(det)
-            if calc == -0: calc = 0 #Corrige sinal negativo no zero
-            linha.append(calc)
-        madj.append(linha)
+    if len(dados) == 2:
+        madj = [[0,0],[0,0]]
+        madj[0][0] = dados[1][1]/det
+        madj[0][1] = -dados[0][1]/det
+        madj[1][0] = -dados[1][0]/det
+        madj[1][1] = dados[0][0]/det
+    if len(dados) == 3:
+        #Transpondo a matriz
+        for i in range(len(dados[0])):
+            matx = []                                                       # Define e limpa a matriz de entrada de valores de X
+            for j in range(len(dados)): matx.append(dados[j][i])            # Transpoe a matriz dados
+            xt.append(matx)                                                 # Atribui valores para matriz xt
+        #Obtendo a matriz adjunta atraves o determinante das matrizes dos cofatores 2x2, aplicando o sinal e 1/det
+        for i in range(len(dados)):
+            if i == 0: a = 1
+            else: a = 0
+            if i == 2: b = 1
+            else: b = 2
+            linha = []
+            for j in range(len(dados)):
+                if j == 0: c = 1
+                else: c = 0
+                if j == 2: d = 1
+                else: d = 2
+                #Adiciona os sinais conforme posição na matriz
+                if (i+j)%2 == 0: calc = (xt[a][c]*xt[b][d]-xt[a][d]*xt[b][c])/int(det)
+                else: calc = -(xt[a][c]*xt[b][d]-xt[a][d]*xt[b][c])/int(det)
+                if calc == -0: calc = 0 #Corrige sinal negativo no zero
+                linha.append(calc)
+            madj.append(linha)
     return(madj)
-h = [[69,67,71,65,72,68,74,65,66,72], [9.5,8.5,11.5,10.5,11,7.5,12,7,7.5,13]]
-s = []
-for t in range(len(h)):
-    m = h[0][t],h[1][t]
-    s.append(m)
-dados = s
+
+# Função para transpor matrizes
+def transposta(dados):
+    xt = []                                                             # Define xt como matriz
+    for i in range(len(dados[0])):
+        matx = []                                                       # Define e limpa a matriz de entrada de valores de X
+        for j in range(len(dados)): matx.append(dados[j][i])            # Transpoe a matriz dados
+        xt.append(matx)                                                 # Atribui valores para matriz xt
+    return (xt)
+
+# Função multiplica matrizes
+def multiplica (a,b):
+    ab = []
+    if (len(b[0])) == 1:
+        for i in range(len(a[0])):
+            soma = 0                                                        # Define como numérica e limpa a variável soma
+            for j in range(len(a)):
+                soma = soma + a[j][i] * b[j]        # Soma a multiplicação de cada linha por coluna de y por xT
+            ab.append(soma)                                                # Atribiu valores da matriz multiplicação xT.y
+    else:
+        for i in range(len(a[0])):
+            for k in range(len(a[0])):
+                soma = 0                                                    # Define como numérica e limpa a variável soma
+                for j in range(len(a)): soma = soma + a[j][k] * b[i][j]# Soma a multiplicação de cada linha por coluna de x por xT
+                ab[i][k] = soma                                            # Atribiu valores da matriz multiplicação xT.x
+    
+# Programa principal utilizando método dos mínimos quadrados
 #dados = arq('Books_attend_grade.dat',3,'\t')
-xtx,xty = LSM(dados)
+h = [[69,67,71,65,72,68,74,65,66,72], [9.5,8.5,11.5,10.5,11,7.5,12,7,7.5,13]]
+dados = transposta(h)                                                   # Transpoe a matriz de entrada
+xtx,xty = LSM(dados)                                                    # Obtém os valores de mínimos quadrados e atribui às matrizes de multiplicação
+mul = multiplica (xtx,xty)
+print (mul)
 print ('XtX =', xtx, 'XtY =',xty)
-det = determinante (xtx)
-if det == 0: print ('Não existe matriz inversa')
+det = determinante (xtx)                                                # Atribui o determinante da matriz
+if det == 0: print ('Não existe matriz inversa')                        # Verifica se a matriz pode ser invertida
 else:
     print ('Matriz inversa possível, determinante = ',det)
     xtxinv = matrizinv(xtx,det)
