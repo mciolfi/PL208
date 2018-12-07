@@ -107,13 +107,22 @@ def LSM (dados):
         xt.append(matx)                                                 # Atribui valores para matriz xT
     #Multiplica matrizes
     for i in range(len(dados[0])):
-        for k in range(len(dados[0])):
-            soma = 0                                                    # Define como numérica e limpa a variável soma
-            for j in range(len(dados)): soma = soma + x[j][k] * xt[i][j]# Soma a multiplicação de cada linha por coluna de x por xT
-            XtX[i][k] = soma                                            # Atribiu valores da matriz multiplicação xT.x
+        soma = 0                                                            # Define como numérica e limpa a variável soma
+        for j in range(len(dados[0])):
+            for k in range(len(dados)):
+                soma = soma + float(x[i][j]) * float(xt[j][k])                             # Soma a multiplicação de cada linha por coluna entre matrizes
+            print (x[i][j], xt[j][k],soma)
+            XtX[i][j] = soma                                                     # Atribiu valores da matriz multiplicação axb
+    
+    #for i in range(len(dados[0])):
+    #    for k in range(len(dados[0])):
+    #        soma = 0                                                    # Define como numérica e limpa a variável soma
+    #        print (x[j][k],xt[i][j])
+    #        for j in range(len(dados)): soma = soma + x[j][k] * xt[i][j]# Soma a multiplicação de cada linha por coluna de x por xT
+    #        XtX[i][k] = soma                                            # Atribiu valores da matriz multiplicação xT.x
     for i in range(len(dados[0])):
         soma = 0                                                        # Define como numérica e limpa a variável soma
-        for j in range(len(dados)): soma = soma + x[j][i] * y[j]        # Soma a multiplicação de cada linha por coluna de y por xT
+        for j in range(len(dados)): soma = soma + float(x[j][i]) * float(y[j])        # Soma a multiplicação de cada linha por coluna de y por xT
         XtY.append([soma])                                              # Atribiu valores da matriz multiplicação xT.y
     return (XtX,XtY)
 
@@ -185,50 +194,59 @@ def matrizinv(dados,det): #Faz inversão das matrizes com base no determinante
 
 # Função para transpor matrizes
 def transposta(dados):
-    xt = []                                                             # Define xt como matriz
+    xt = []                                                                 # Define xt como matriz
     for i in range(len(dados[0])):
-        matx = []                                                       # Define e limpa a matriz de entrada de valores de X
-        for j in range(len(dados)): matx.append(dados[j][i])            # Transpoe a matriz dados
-        xt.append(matx)                                                 # Atribui valores para matriz xt
+        matx = []                                                           # Define e limpa a matriz de entrada de valores de X
+        for j in range(len(dados)): matx.append(dados[j][i])                # Transpoe a matriz dados
+        xt.append(matx)                                                     # Atribui valores para matriz xt
     return (xt)
 
 # Função multiplica matrizes
 def multiplica (a,b):
     ab = []
-    if (len(b[0])) == 1:
-        for i in range(len(a[0])):
-            soma = 0                                                        # Define como numérica e limpa a variável soma
-            for j in range(len(a)):
-                soma = soma + a[j][i] * b[j]        # Soma a multiplicação de cada linha por coluna de y por xT
-            ab.append(soma)                                                # Atribiu valores da matriz multiplicação xT.y
-    else:
-        for i in range(len(a[0])):
-            for k in range(len(a[0])):
-                soma = 0                                                    # Define como numérica e limpa a variável soma
-                for j in range(len(a)): soma = soma + a[j][k] * b[i][j]# Soma a multiplicação de cada linha por coluna de x por xT
-                ab[i][k] = soma                                            # Atribiu valores da matriz multiplicação xT.x
-    
+    for mat in range(len(b)): ab.append ([0*len(b)]) # Define o tamanho da matriz de multiplicação
+    print (ab)        
+    for i in range(len(a)):
+        soma = 0                                                            # Define como numérica e limpa a variável soma
+        for j in range(len(a[0])):
+            for k in range(len(b[0])):
+                soma = soma + a[i][j] * b[j][k]                             # Soma a multiplicação de cada linha por coluna entre matrizes
+        ab[i][k] = soma                                                     # Atribiu valores da matriz multiplicação axb
+    return(ab)
+
+# Função plotar resultados
+def plot(dados,beta,nome,x,y):
+    import matplotlib.pyplot as plt
+    #Plotando resultados entre os mínimos e máximos valores, caso precisasse a intersecção com o 0, ponto1=[0,hmax],ponto2=[beta[0],tampemax]
+    dadosmin = min(transposta(dados)[0])                                               # Define os mínimos valores de dados
+    dadosmax = max(transposta(dados)[0])
+    dadosi= [float(dadosmin),float(dadosmax)]
+    tampemin = beta[0][0] + float(dadosmin) * beta[1][0]
+    tampemax = beta[0][0] + float(dadosmax) * beta[1][0]
+    tampei = [tampemin,tampemax]
+    plt.plot(float(transposta(dados)[0]),float(transposta(dados)[1]),'go')
+    plt.plot(dadosi,tampei,'r')
+    plt.grid(True)
+    plt.title(nome)
+    plt.xlabel(x)
+    plt.ylabel(y)
+    plt.show()
+
+
 # Programa principal utilizando método dos mínimos quadrados
-#dados = arq('Books_attend_grade.dat',3,'\t')
-h = [[69,67,71,65,72,68,74,65,66,72], [9.5,8.5,11.5,10.5,11,7.5,12,7,7.5,13]]
-dados = transposta(h)                                                   # Transpoe a matriz de entrada
+dados = arq('Books_attend_grade.dat',3,'\t')
+print (dados)
+#h = [[69,67,71,65,72,68,74,65,66,72], [9.5,8.5,11.5,10.5,11,7.5,12,7,7.5,13]]
+#dados = transposta(h)                                                   # Transpoe a matriz de entrada
+#print (dados,'/n')
 xtx,xty = LSM(dados)                                                    # Obtém os valores de mínimos quadrados e atribui às matrizes de multiplicação
-mul = multiplica (xtx,xty)
-print (mul)
 print ('XtX =', xtx, 'XtY =',xty)
 det = determinante (xtx)                                                # Atribui o determinante da matriz
 if det == 0: print ('Não existe matriz inversa')                        # Verifica se a matriz pode ser invertida
 else:
     print ('Matriz inversa possível, determinante = ',det)
     xtxinv = matrizinv(xtx,det)
-    print (xtxinv)
-    beta =  []
-    for t in range(len(xtxinv[0])): beta.append([0]*len(dados[0])) #Definindo tamanho da matriz resultado
-    #Multiplicando matrizes
-    for i in range(len(xtxinv[0])):
-        for k in range(len(xtxinv[0])):
-            soma = 0
-            for j in range(len(xtxinv)):
-                soma = soma + xty[j] * xtxinv[i][j]
-            beta[i][k] = soma
-print (beta)
+    print ('XtXinv = ',xtxinv)
+    beta = multiplica(xtxinv,xty)
+    print ('beta = ',beta)
+plot (dados,beta,'Height x Shoe Size','Altura','Tamanho do pé') 
