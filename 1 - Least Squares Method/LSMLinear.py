@@ -105,13 +105,14 @@ def LSM (dados):
         matx = []                                                       # Define e limpa a matriz de entrada de valores de X
         for j in range(len(dados)): matx.append(x[j][i])                # Transpoe a matriz x
         xt.append(matx)                                                 # Atribui valores para matriz xT
+    print (xt,x)
     #Multiplica matrizes
     for i in range(len(dados[0])):
         soma = 0                                                            # Define como numérica e limpa a variável soma
         for j in range(len(dados[0])):
             for k in range(len(dados)):
                 soma = soma + float(x[i][j]) * float(xt[j][k])                             # Soma a multiplicação de cada linha por coluna entre matrizes
-            print (x[i][j], xt[j][k],soma)
+                print (x[i][j],xt[j][k])
             XtX[i][j] = soma                                                     # Atribiu valores da matriz multiplicação axb
     
     #for i in range(len(dados[0])):
@@ -234,11 +235,10 @@ def plot(dados,beta,nome,x,y):
 
 
 # Programa principal utilizando método dos mínimos quadrados
-dados = arq('Books_attend_grade.dat',3,'\t')
+#dados = arq('Books_attend_grade.dat',3,'\t')
+h = [[69,67,71,65,72,68,74,65,66,72], [9.5,8.5,11.5,10.5,11,7.5,12,7,7.5,13]]
+dados = transposta(h)                                                   # Transpoe a matriz de entrada
 print (dados)
-#h = [[69,67,71,65,72,68,74,65,66,72], [9.5,8.5,11.5,10.5,11,7.5,12,7,7.5,13]]
-#dados = transposta(h)                                                   # Transpoe a matriz de entrada
-#print (dados,'/n')
 xtx,xty = LSM(dados)                                                    # Obtém os valores de mínimos quadrados e atribui às matrizes de multiplicação
 print ('XtX =', xtx, 'XtY =',xty)
 det = determinante (xtx)                                                # Atribui o determinante da matriz
