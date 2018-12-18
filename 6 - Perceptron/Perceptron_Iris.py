@@ -1,3 +1,4 @@
+# Open dataset
 def arq(name,ndata,types):
     import csv
     listt = []                              # Define listt as matrix
@@ -10,7 +11,14 @@ def arq(name,ndata,types):
             listt.append(line)                                      # Define listt as the data inside file
     return (listt)
 
-
+# Function to transpose matrix
+class transpose:
+    def __init__ (self,matrix):
+        mt = []
+        for i in range(len(matrix[0])): mt.append([float(matrix[j][i]) for j in range(len(matrix))])
+        self.T = mt
+        return (mt)
+        
 # Threshold function: Binary result
 def linear (inputs,weights):
     output = dot(inputs,weights)    #Multiply the inputs with weights
@@ -38,7 +46,7 @@ def perceptron (inputs, training_set_outputs, txlearning):
 
 # Main program
 from numpy import exp, array, random, dot
-listt = arq('iris.data.txt',5,',')  # Define listt as the data inside the file
+listt = array(arq('iris.data.txt',5,','))  # Define listt as the data inside the file
 inputs = []
 training_set_outputs = []
 for cont in range(len(listt)):
@@ -48,7 +56,8 @@ for cont in range(len(listt)):
     if listt[cont][4] == 'Iris-versicolor': typef = 1
     if listt[cont][4] == 'Iris-virginica':  typef = 2
     training_set_outputs.append(typef)
-training_set_outputs = [training_set_outputs]
+inputs = array(inputs)
+training_set_outputs = array([training_set_outputs])
 print ('Iris')
 txlearning = 0.01
 perceptron (inputs, training_set_outputs, txlearning)
