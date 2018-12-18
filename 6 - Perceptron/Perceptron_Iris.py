@@ -1,8 +1,8 @@
 # Open dataset
 def arq(name,ndata,types):
     import csv
-    listt = []                              # Define listt as matrix
-    with open(name, newline='') as csvfile: # csv module will detect new lines
+    listt = []                                                      # Define listt as matrix
+    with open(name, newline='') as csvfile:                         # csv module will detect new lines
         if types == ' ':  text = csv.reader(csvfile, delimiter=' ') # classify by space
         if types == ',':  text = csv.reader(csvfile, delimiter=',') # classify by comma
         if types == '\t': text = csv.reader(csvfile, delimiter='\t')# classify by tab
@@ -11,19 +11,11 @@ def arq(name,ndata,types):
             listt.append(line)                                      # Define listt as the data inside file
     return (listt)
 
-# Function to transpose matrix
-class transpose:
-    def __init__ (self,matrix):
-        mt = []
-        for i in range(len(matrix[0])): mt.append([float(matrix[j][i]) for j in range(len(matrix))])
-        self.T = mt
-        return (mt)
-        
 # Threshold function: Binary result
 def linear (inputs,weights):
-    output = dot(inputs,weights)    #Multiply the inputs with weights
+    output = dot(inputs,weights)                        # Multiply the inputs with weights
     for cont in range(len(output)):
-        if output[cont][0] > 0.5:   output[cont][0] = 1   # Establishes the value of 0.5 as a limit for binary
+        if output[cont][0] > 0.5:   output[cont][0] = 1 # Establishes the value of 0.5 as a limit for binary
         else:                       output[cont][0] = 0
     return (output)
 
@@ -56,8 +48,8 @@ for cont in range(len(listt)):
     if listt[cont][4] == 'Iris-versicolor': typef = 1
     if listt[cont][4] == 'Iris-virginica':  typef = 2
     training_set_outputs.append(typef)
-inputs = array(inputs)
-training_set_outputs = array([training_set_outputs])
+inputs = array(inputs)                                  # Define inputs as matrix to transpose after
+training_set_outputs = array([training_set_outputs])    # Define outputs as matrix to transpose after
 print ('Iris')
 txlearning = 0.01
 perceptron (inputs, training_set_outputs, txlearning)
