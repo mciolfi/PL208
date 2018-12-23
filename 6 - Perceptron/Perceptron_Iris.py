@@ -45,14 +45,22 @@ def perceptron(inputs, training_set_outputs, txlearning):
 
 
 # Classificator between Iris-setosa and Iris-versicolor
-def classificator(inputs,typef):
-    for i in range(len(inputs)):
-        print(inputs[i][4])
-        if inputs[i][4] == typef:
-            print('sepal length in cm =', inputs[i][0])
-            print('sepal width in cm =', inputs[i][1])
-            print('petal length in cm =', inputs[i][2])
-            print('petal width in cm =', inputs[i][3])
+def classificator(inputs,training_set_outputs,typef):
+    sl = []
+    sw = []
+    pl = []
+    pw = []
+    for i in range(len(training_set_outputs)):
+        if training_set_outputs[i][0] == typef:
+            sl.append(inputs[i][0])
+            sw.append(inputs[i][1])
+            pl.append(inputs[i][2])
+            pw.append(inputs[i][3])
+    print ('Sepal length from',min(sl),'to',max(sl),'cm')
+    print ('Sepal width from',min(sw),'to',max(sw),'cm')
+    print ('Petal length from',min(pl),'to',max(pl),'cm')
+    print ('Petal width from',min(pw),'to',max(pw),'cm')
+    #if max(sl)<max(pl) && min(sl)
 
 
 # Main program
@@ -75,8 +83,7 @@ training_set_outputs = array(training_set_outputs)  # Define outputs as matrix t
 print('Iris')
 txlearning = 0.01
 perceptron(inputs, training_set_outputs, txlearning)
-print ('teste =',inputs[0][0])
 print('Iris-setosa')
-classificator(inputs,0)
+classificator(inputs,training_set_outputs,0)
 print('Iris-versicolor')
-classificator(inputs,1)
+classificator(inputs,training_set_outputs,1)
