@@ -45,10 +45,13 @@ training_set_outputs = []
 for cont in range(len(listt)):
     inputs.append([float(listt[cont][i]) for i in range(4)])
     # Define one value for each classification: Iris-setosa = 0,Iris-versicolor = 1, Iris-virginica = 2
-    if listt[cont][4] == 'Iris-setosa':     typef = [1,0,0]
-    if listt[cont][4] == 'Iris-versicolor': typef = [0,1,0]
-    if listt[cont][4] == 'Iris-virginica':  typef = [0,0,1]
-    training_set_outputs.append(typef)
+    if listt[cont][4] == 'Iris-setosa':
+        inputs.append([float(listt[cont][i]) for i in range(4)])
+        training_set_outputs.append([0])
+    if listt[cont][4] == 'Iris-versicolor':
+        inputs.append([float(listt[cont][i]) for i in range(4)])
+        training_set_outputs.append([1])
+    #if listt[cont][4] == 'Iris-virginica':  don't include on list
 inputs = array(inputs)                              # Define inputs as matrix to transpose after
 training_set_outputs = array(training_set_outputs)  # Define outputs as matrix to transpose after
 #print (training_set_outputs)
