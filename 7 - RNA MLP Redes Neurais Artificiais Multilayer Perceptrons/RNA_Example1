@@ -1,0 +1,27 @@
+# Perceptron with 2 inputs (2 Neuron) and 1 output (1 Neuron)
+def perceptron (inputs, weights, training_set_outputs, txlearning):
+    #weights = random.random((len(inputs[0]), 1))        # Define the initial weight as random
+    weightsold = [[0] for a in range(len(inputs[0]))]   # Define matrix to save old weights value
+    iteration = 0                                       # Define variable iteration
+    while iteration < 100 and max(abs(weightsold-weights))[0] > 0.001:  # Learning iteraction until 100 or when the weights stop to change
+        iteration += 1                                  # Count iteration number
+        #net = dot(inputs, weights)
+        #output = linear(inputs,weights)                 # Output = linear thresold
+        output = 1 / (1 + exp(-(dot(inputs, weights))))
+        for i in range (len(weights)): weightsold [i][0] = weights[i][0]        # Save old weights
+        weights += txlearning * dot(inputs.T,(training_set_outputs - output)* output * (1 - output)) # Weights update
+    print('#Iteration =',iteration)
+    print('Weights =',weights.T)
+    print('Expected value =',training_set_outputs.T)
+    final_test = array(1 / (1 + exp(-(dot(inputs, weights))))).T == training_set_outputs.T   # Check if the inputs plus weights = outputs
+    if min(final_test[0]):  print ('Final value =',array(1 / (1 + exp(-(dot(inputs, weights))))).T,'Learned!\n')     # If all results are true then has been learned
+    else:                   print ('Final value =',array(1 / (1 + exp(-(dot(inputs, weights))))).T,'NOT Learned!\n')
+
+# Main program
+from numpy import exp, array, random, dot
+# 3 entradas
+inputs = array([[2, 1], [-1, 1], [3, 2]])
+weights = array([[0.5,0.4],[-0.1,0.3],[1,0.01]])
+txlearning = 0.4
+training_set_outputs = array([[2, 3, 3]]).T
+perceptron (inputs, weights, training_set_outputs, txlearning)
