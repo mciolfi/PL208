@@ -5,7 +5,7 @@ def arq(name, ndata, types):
     with open(name, newline='') as csvfile:  # csv module will detect new lines
         if types == ' ':  text = csv.reader(csvfile, delimiter=' ')  # classify by space
         if types == ',':  text = csv.reader(csvfile, delimiter=',')  # classify by comma
-        if types == '\t': text = csv.reader(csvfile, delimiter='\t')  # classify by tab
+        if types == '\t': text = csv.reader(csvfile, delimiter='\t') # classify by tab
         for line in text:
             for t in range(len(line) - ndata): line.remove('')  # Removes zeros inside data
             listt.append(line)  # Define listt as the data inside file
@@ -46,21 +46,48 @@ def perceptron(inputs, training_set_outputs, txlearning):
 
 # Classificator between Iris-setosa and Iris-versicolor
 def classificator(inputs,training_set_outputs,typef):
-    sl = []
-    sw = []
-    pl = []
-    pw = []
+    # Check number of sample match with flower type
+    count = 0
     for i in range(len(training_set_outputs)):
         if training_set_outputs[i][0] == typef:
-            sl.append(inputs[i][0])
-            sw.append(inputs[i][1])
-            pl.append(inputs[i][2])
-            pw.append(inputs[i][3])
-    print ('Sepal length from',min(sl),'to',max(sl),'cm')
-    print ('Sepal width from',min(sw),'to',max(sw),'cm')
-    print ('Petal length from',min(pl),'to',max(pl),'cm')
-    print ('Petal width from',min(pw),'to',max(pw),'cm')
+            count = count + 1
+    data = [[0] * count for i in range(4)]
+    # Define the data matriz with only cases matched
+    count = 0
+    for i in range(len(training_set_outputs)):
+        if training_set_outputs[i][0] == typef:
+            for j in range(4):
+                data[j][count] = inputs[i][j]
+            count = count + 1
+    # Print max and min results of each type of flower
+    print ('Sepal length from',min(data[0]),'to',max(data[0]),'cm')
+    print ('Sepal width from',min(data[1]),'to',max(data[1]),'cm')
+    print ('Petal length from',min(data[2]),'to',max(data[2]),'cm')
+    print ('Petal width from',min(data[3]),'to',max(data[3]),'cm')
+    return (data)
     #if max(sl)<max(pl) && min(sl)
+
+
+# Plot results
+def plot (x1, y1, x2, y2, cat1, x3, y3, x4, y4, cat2):
+    import matplotlib.pyplot as plt
+    #plot above results of Sepal differencies
+    plt.subplot(211)
+    plt.title('Dataset Iris Setosa vs. Versicolor')
+    plt.plot(x1, y1, 'go', label = cat1 + ' - Sepal')
+    plt.plot(x3, y3, 'r^', label = cat2 + ' - Sepal')
+    plt.grid(True)
+    plt.ylabel('width')
+    plt.legend()
+    # plot above results of Petal differencies
+    plt.subplot(212)
+    plt.plot(x2, y2, 'go', label = cat1 + ' - Petal')
+    plt.plot(x4, y4, 'r^', label = cat2 + ' - Petal')
+    plt.grid(True)
+    plt.xlabel('lenght')
+    plt.ylabel('width')
+    plt.legend()
+    plt.show()
 
 
 # Main program
@@ -81,9 +108,12 @@ for cont in range(len(listt)):
 inputs = array(inputs)  # Define inputs as matrix to transpose after
 training_set_outputs = array(training_set_outputs)  # Define outputs as matrix to transpose after
 print('Iris')
-txlearning = 0.01
-perceptron(inputs, training_set_outputs, txlearning)
+txlearning = 0.01  # Define learning rate
+perceptron(inputs, training_set_outputs, txlearning)  # Run perceptron
+# Show differencies between Iris setosa and versicolor
 print('Iris-setosa')
-classificator(inputs,training_set_outputs,0)
+data0 = classificator(inputs,training_set_outputs,0)
 print('Iris-versicolor')
-classificator(inputs,training_set_outputs,1)
+data1 = classificator(inputs,training_set_outputs,1)
+# Plot results
+plot (data0[0], data0[1], data0[2], data0[3], 'Iris-setosa',data1[0], data1[1], data1[2], data1[3], 'Iris-versicolor')
