@@ -1,6 +1,7 @@
 # Open dataset
 def arq(name, ndata, types):
     import csv
+
     listt = []  # Define listt as matrix
     with open(name, newline='') as csvfile:  # csv module will detect new lines
         if types == ' ':  text = csv.reader(csvfile, delimiter=' ')  # classify by space

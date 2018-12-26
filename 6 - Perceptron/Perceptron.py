@@ -6,6 +6,7 @@ def linear (inputs,weights):
         else:                       output[cont][0] = 0
     return (output)
 
+
 # Perceptron with 2 inputs (2 Neuron) and 1 output (1 Neuron)
 def perceptron (inputs, training_set_outputs, txlearning):
     weights = random.random((len(inputs[0]), 1))        # Define the initial weight as random
@@ -15,11 +16,11 @@ def perceptron (inputs, training_set_outputs, txlearning):
         iteration += 1                                  # Count iteration number
         output = linear(inputs,weights)                 # Output = linear thresold
         for i in range (len(weights)): weightsold [i][0] = weights[i][0]        # Save old weights
-        weights += txlearning * dot(inputs.T,(training_set_outputs.T - output)) # Weights update
+        weights += txlearning * dot(inputs.T,(training_set_outputs - output)) # Weights update
     print('#Iteration =',iteration)
     print('Weights =',weights.T)
-    print('Expected value =',training_set_outputs)
-    final_test = linear(inputs,weights).T == training_set_outputs   # Check if the inputs plus weights = outputs
+    print('Expected value =',training_set_outputs.T)
+    final_test = linear(inputs,weights).T == training_set_outputs.T   # Check if the inputs plus weights = outputs
     if min(final_test[0]):  print ('Final value =',linear(inputs,weights).T,'Learned!\n')     # If all results are true then has been learned
     else:                   print ('Final value =',linear(inputs,weights).T,'NOT Learned!\n')
 
@@ -30,13 +31,13 @@ inputs = array([[0, 0], [0, 1], [1, 0], [1, 1]])
 txlearning = 0.01
 #And
 print ('AND Test')
-training_set_outputs = array([[0, 0, 0, 1]])
+training_set_outputs = array([[0, 0, 0, 1]]).T
 perceptron (inputs, training_set_outputs, txlearning)
 #OR
 print ('OR Test')
-training_set_outputs = array([[0, 1, 1, 1]])
+training_set_outputs = array([[0, 1, 1, 1]]).T
 perceptron (inputs, training_set_outputs, txlearning)
 #XOR
 print ('XOR Test')
-training_set_outputs = array([[0, 1, 1, 0]])
+training_set_outputs = array([[0, 1, 1, 0]]).T
 perceptron (inputs, training_set_outputs, txlearning)
