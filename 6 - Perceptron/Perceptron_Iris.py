@@ -1,3 +1,15 @@
+__author__ = 'Márcio Ciolfi'
+__copyright__ = 'Copyright 2018, ML'
+__license__ = 'Ciolfi'
+__version__ = '1.0'
+__maintainer__ = 'Márcio Ciolfi'
+__email__ = 'ciolfi@gmail.com'
+__course__ = 'PL208'
+__username__ = 'mciolfi'
+__description__ = 'Perceptron linear using Iris dataset'
+__status__ = 'Production'
+
+
 # Open dataset
 def arq(name, ndata, types):
     import csv
