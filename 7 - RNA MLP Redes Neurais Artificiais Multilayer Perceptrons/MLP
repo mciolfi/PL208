@@ -1,0 +1,4 @@
+import numpy as np
+from 7 - RNA MLP Redes Neurais Artificiais Multilayer Perceptrons.NeuralNetwork import *
+from 7 - RNA MLP Redes Neurais Artificiais Multilayer Perceptrons.Neuron import *
+
