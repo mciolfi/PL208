@@ -1,0 +1,5 @@
+# Class definition of a generic neuron
+class Neuron(object):
+    def __init__(self, weights, fnet):
+        self.weights = weights          # Weights array
+        self.fnet = fnet                # Define type of function that represent the neuron function
