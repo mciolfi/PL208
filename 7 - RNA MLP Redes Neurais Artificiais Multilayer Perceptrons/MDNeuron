@@ -1,0 +1,6 @@
+# Class definition of a MD neuron
+class Neuron(object):
+    def __init__(self, dimension, weights, fnet):
+        self.dimension = dimension      # Neurol dimension
+        self.weights = weights          # Weights array
+        self.fnet = fnet                # Define type of function that represent the neuron function
