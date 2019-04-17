@@ -1,4 +1,13 @@
 import numpy as np
-from 7 - RNA MLP Redes Neurais Artificiais Multilayer Perceptrons.NeuralNetwork import *
-from 7 - RNA MLP Redes Neurais Artificiais Multilayer Perceptrons.Neuron import *
+from NeuralNetwork import *
+from Neuron import *
+
+Def MLP():
+    Ninput = 4
+    Noutput = 3
+    Nlayer = 2
+    Net = []
+    Nstart = round(Ninput + Noutput) / 2
+    print (Nstart)
+    # Neural Network generation
 
