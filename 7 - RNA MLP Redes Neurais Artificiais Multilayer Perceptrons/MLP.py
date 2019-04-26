@@ -20,34 +20,50 @@ def linear(inputs, weights):
             output[cont][0] = 0
     return (output)
 
-def Ninput(inputs, weights):
-    output = 1 / (1 + exp(-(dot(inputs, weights))))
-    print ('saida',output)
-    return (output)
+def net (inputs, weights):
+    return (dot(inputs, weights))
+            
+def fnet(net):
+    # Sigmoid function considering the inputs
+    fnet = 1 / (1 + exp(-(net)))
+    print ('saida',fnet)
+    return (fnet)
 
 # Main programm
 #training_set_inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
-Ninp = 3
+Ninp = 2
 Neu1a = 2
 Nlay = 2
-Nout = 3
-#weights =[]
+Nout = 1
+weights =[]
+matrix = [[1,2],[3]]
+
 Nstart = int(round((Ninp + Nout) / 2 , 0))
 Nneurons = matrix_gen (Nlay,Nstart)
 print (Nneurons)
 
 # Applying the inputs and the desired outputs
-inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
-training_set_outputs = array([[0, 1, 1, 0]]).T
+# inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
+inputs = array([2,1])
+#training_set_outputs = array([[0, 1, 1, 0]]).T
+output = array([2]).T
 random.seed(1)
 
 # Defining randomic weights by synapt connection numbers
-#weights = 2 * random.random(((len(inputs[0]), 2)) - 1)
-weights = 2 * random.random((len(inputs[0]), Neu1a)) - 1
-print (weights)
-Ninput(inputs, weights)
-
-    #Ninput(inputs, weights[i])
+# weights = 2 * random.random(((len(inputs[0]), 2)) - 1)
+# weights = 2 * random.random((len(inputs[0]), Neu1a)) - 1
+weights = ([[0.5, 0.4], [-0.1, 0.3], [1, 0.01]])
+last = 0
+for a in range(Nlay):
+    print (len(matrix[a]))
+    weightsl = []
+    [weightsl.append(weights[i+last]) for i in range(len(matrix[a]))]
+    b= net(inputs, array(weightsl).T)
+    print ('=',b)
+    inputs = fnet(b[0])
+    last = len(matrix[a])
+e = (output - inputs) * fnet(weightsl)
+print (e)
 
 #for iteration in range(10000):
 #    output = 1 / (1 + exp(-(dot(training_set_inputs, synaptic_weights))))
