@@ -22,11 +22,11 @@ def linear(inputs, weights):
 
 def net (inputs, weights):
     return (dot(inputs, weights))
-            
+
 def fnet(net):
     # Sigmoid function considering the inputs
     fnet = 1 / (1 + exp(-(net)))
-    print ('saida',fnet)
+    #print ('saida',fnet)
     return (fnet)
 
 # Main programm
@@ -37,10 +37,12 @@ Nlay = 2
 Nout = 1
 weights =[]
 matrix = [[1,2],[3]]
+txlearning = 0.4
+function = []
 
 Nstart = int(round((Ninp + Nout) / 2 , 0))
-Nneurons = matrix_gen (Nlay,Nstart)
-print (Nneurons)
+#Nneurons = matrix_gen (Nlay,Nstart)
+#print (Nneurons)
 
 # Applying the inputs and the desired outputs
 # inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
@@ -55,14 +57,19 @@ random.seed(1)
 weights = ([[0.5, 0.4], [-0.1, 0.3], [1, 0.01]])
 last = 0
 for a in range(Nlay):
-    print (len(matrix[a]))
+    #print (len(matrix[a]))
     weightsl = []
     [weightsl.append(weights[i+last]) for i in range(len(matrix[a]))]
-    b= net(inputs, array(weightsl).T)
-    print ('=',b)
-    inputs = fnet(b[0])
+    out = net(inputs, array(weightsl).T)
+    inputs = fnet(out)
+    function.append(inputs)
+    #print('pesos',weightsl, 'out',out, 'inputs',inputs)
     last = len(matrix[a])
-e = (output - inputs) * fnet(weightsl)
+print (weights, function)
+# Calculating the error
+e = (output - inputs) * fnet(out) * (1 - fnet(out))
+weights = txlearning * e * function
+
 print (e)
 
 #for iteration in range(10000):
