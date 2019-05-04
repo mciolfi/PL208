@@ -61,18 +61,19 @@ random.seed(1)
 # weights = 2 * random.random((len(inputs[0]), Neu1a)) - 1
 weights = ([[0.5, 0.4], [-0.1, 0.3], [1, 0.01]])
 last = 0
+inputsl = inputs
 for a in range(Nlay):
     #print (len(matrix[a]))
     weightsl = []
     [weightsl.append(weights[i+last]) for i in range(len(matrix[a]))]
-    out = net(inputs, array(weightsl).T)
-    inputs = fnet(out)
-    function.append(inputs)
+    out = net(inputsl, array(weightsl).T)
+    inputsl = fnet(out)
+    function.append(inputsl)
     #print('pesos',weightsl, 'out',out, 'inputs',inputs)
     last = len(matrix[a])
 print (weights, function)
 # Calculating the error
-e = (output - inputs) * fnet(out) * (1 - fnet(out))
+e = (output - inputsl) * fnet(out) * (1 - fnet(out))
 dweights.append(txlearning * e * function[0])
 print (dweights)
 e1 = e * weights[2] * function[0] * (1- function[0])
