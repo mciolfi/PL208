@@ -40,7 +40,8 @@ Nout = 1
 weights =[]     # Define weights as matrix of synaptic weights for all the neurons
 netf = []       # Define netf as matrix for the results of net funciotn
 dweights = []   # Define dweights as matrix for delta weights results of backpropagation
-function = []
+inputslay = []  # Define inputslay as matrix for inputs in each layer
+e = [[],[],[]]          # Define e as matrix of error for each layer
 RNAlay = [[1,2],[3]]
 txlearning = 0.4
 
@@ -63,8 +64,7 @@ weights = ([[0.5, 0.4], [-0.1, 0.3], [1, 0.01]])
 
 # Define and clear inputs of each layer
 last = 0
-inputsl = inputs
-function.append(inputs)
+inputslay.append(inputs)
 
 # Calculing the neurons output for each layer
 for layer in range(len(RNAlay)):
@@ -74,11 +74,18 @@ for layer in range(len(RNAlay)):
     [weightsl.append(weights[i+last]) for i in range(len(RNAlay[layer]))]
     last = len(RNAlay[layer])                                               # Get the length to sum on next weights calculation
 
-    netf.append (net(function[layer], array(weightsl).T))                   # Define netf as matrix of net results
-    function.append(fnet(netf[layer]))                                      # Define function as matrix of neurons output
+    netf.append (net(inputslay[layer], array(weightsl).T))                  # Append on netf the net results
+    inputslay.append(fnet(netf[layer]))                                     # Append on matrix the neurons output
 
-print (netf, function)
-# Calculating the error
+print (netf, inputslay)
+
+# Calculating the error for each layer
+for layer in range (len(RNAlay), 0, -1):
+#    e[layer] = output - inputslay[layer] * fnet(netf[layer]) * (1 - fnet(netf[layer]))
+    print (layer, inputslay[layer], fnet(netf[layer - 1]), 1- fnet(netf[layer - 1]))#, (1 - fnet(netf[layer]))
+#, fnet(netf[layer]) , (1 - fnet(netf[layer])))
+#print (e)
+
 #e = (output - inputsl) * fnet(out) * (1 - fnet(out))
 #dweights.append(txlearning * e * function[0])
 #print (dweights)
@@ -96,7 +103,7 @@ print (netf, function)
 #print (1 / (1 + exp(-(dot(array([1, 0, 0]), synaptic_weights)))))
 
 
-fnet = 0
-f_ativ = lambda x: 1.0 / (1 + np.power(np.e, -x))
+#fnet = 0
+#f_ativ = lambda x: 1.0 / (1 + np.power(np.e, -x))
 
 
