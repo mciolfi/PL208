@@ -80,11 +80,15 @@ for layer in range(len(RNAlay)):
 print (netf, inputslay)
 
 # Calculating the error for each layer
+delta = output - inputslay[len(RNAlay)]
+
 for layer in range (len(RNAlay), 0, -1):
-#    e[layer] = output - inputslay[layer] * fnet(netf[layer]) * (1 - fnet(netf[layer]))
-    print (layer, inputslay[layer], fnet(netf[layer - 1]), 1- fnet(netf[layer - 1]))#, (1 - fnet(netf[layer]))
+    #e[layer] = delta * fnet(netf[layer - 1]) * 1- fnet(netf[layer - 1])
+    e[layer] = delta * inputslay[layer] * 1 - inputslay[layer]
+    delta = e[layer] * weights [layer]
+    print (layer, delta, e[layer] , weights [layer])
 #, fnet(netf[layer]) , (1 - fnet(netf[layer])))
-#print (e)
+print ('e',e)
 
 #e = (output - inputsl) * fnet(out) * (1 - fnet(out))
 #dweights.append(txlearning * e * function[0])
