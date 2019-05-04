@@ -38,10 +38,11 @@ Ninp = 2
 Neu1a = 2
 Nlay = 2
 Nout = 1
-weights =[]
-dweights = []
+weights =[]     # Define weights as matrix of synaptic weights for all the neurons
+netf = []       # Define netf as matrix for the results of net funciotn
+dweights = []   # Define dweights as matrix for delta weights results of backpropagation
 function = []
-matrix = [[1,2],[3]]
+RNAlay = [[1,2],[3]]
 txlearning = 0.4
 
 
@@ -60,17 +61,28 @@ random.seed(1)
 # weights = 2 * random.random(((len(inputs[0]), 2)) - 1)
 # weights = 2 * random.random((len(inputs[0]), Neu1a)) - 1
 weights = ([[0.5, 0.4], [-0.1, 0.3], [1, 0.01]])
+
+# Define and clear inputs of each layer
 last = 0
 inputsl = inputs
+# Calculing the neurons output for each layer
+print ('len',len(RNAlay))
 for a in range(Nlay):
-    #print (len(matrix[a]))
+
+    # Get the weights of each layer
     weightsl = []
-    [weightsl.append(weights[i+last]) for i in range(len(matrix[a]))]
+    [weightsl.append(weights[i+last]) for i in range(len(RNAlay[a]))]
+
+    #Define netf as matrix of net results
+    netf.append (net(inputsl, array(weightsl).T))
+
+    # Calculate net function (multipling inputs and weights of each layer)
     out = net(inputsl, array(weightsl).T)
+    # Define the next layer inputs using Fnet function and
     inputsl = fnet(out)
     function.append(inputsl)
     #print('pesos',weightsl, 'out',out, 'inputs',inputs)
-    last = len(matrix[a])
+    last = len(RNAlay[a])
 print (weights, function)
 # Calculating the error
 e = (output - inputsl) * fnet(out) * (1 - fnet(out))
