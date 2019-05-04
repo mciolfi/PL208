@@ -36,7 +36,6 @@ def fnet(net):
 #training_set_inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
 Ninp = 2
 Neu1a = 2
-Nlay = 2
 Nout = 1
 weights =[]     # Define weights as matrix of synaptic weights for all the neurons
 netf = []       # Define netf as matrix for the results of net funciotn
@@ -65,36 +64,31 @@ weights = ([[0.5, 0.4], [-0.1, 0.3], [1, 0.01]])
 # Define and clear inputs of each layer
 last = 0
 inputsl = inputs
+function.append(inputs)
+
 # Calculing the neurons output for each layer
-print ('len',len(RNAlay))
-for a in range(Nlay):
+for layer in range(len(RNAlay)):
 
     # Get the weights of each layer
     weightsl = []
-    [weightsl.append(weights[i+last]) for i in range(len(RNAlay[a]))]
+    [weightsl.append(weights[i+last]) for i in range(len(RNAlay[layer]))]
+    last = len(RNAlay[layer])                                               # Get the length to sum on next weights calculation
 
-    #Define netf as matrix of net results
-    netf.append (net(inputsl, array(weightsl).T))
+    netf.append (net(function[layer], array(weightsl).T))                   # Define netf as matrix of net results
+    function.append(fnet(netf[layer]))                                      # Define function as matrix of neurons output
 
-    # Calculate net function (multipling inputs and weights of each layer)
-    out = net(inputsl, array(weightsl).T)
-    # Define the next layer inputs using Fnet function and
-    inputsl = fnet(out)
-    function.append(inputsl)
-    #print('pesos',weightsl, 'out',out, 'inputs',inputs)
-    last = len(RNAlay[a])
-print (weights, function)
+print (netf, function)
 # Calculating the error
-e = (output - inputsl) * fnet(out) * (1 - fnet(out))
-dweights.append(txlearning * e * function[0])
-print (dweights)
-e1 = e * weights[2] * function[0] * (1- function[0])
-print (e1)
-dweights.append(txlearning * e1 * inputs)
-print (txlearning, e1 , inputs)
-weights = txlearning * e * function
+#e = (output - inputsl) * fnet(out) * (1 - fnet(out))
+#dweights.append(txlearning * e * function[0])
+#print (dweights)
+#e1 = e * weights[2] * function[0] * (1- function[0])
+#print (e1)
+#dweights.append(txlearning * e1 * inputs)
+#print (txlearning, e1 , inputs)
+#weights = txlearning * e * function
 
-print (e)
+#print (e)
 
 #for iteration in range(10000):
 #    output = 1 / (1 + exp(-(dot(training_set_inputs, synaptic_weights))))
