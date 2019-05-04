@@ -1,12 +1,14 @@
 import numpy as np
 from numpy import exp, array, random, dot
 
+
 # Class definition of a generic neuron
 class Neuron(object):
     def __init__(self, weights, fnet):
         self.weights = weights          # Weights array
         self.fnet = fnet                # Define type of function that represent the neuron function
-        
+
+
 def matrix_gen (n_lines, n_columns):
     return [[((j+1)+i*n_columns) for j in range(n_columns)] for i in range(n_lines)]
 
@@ -20,13 +22,14 @@ def linear(inputs, weights):
             output[cont][0] = 0
     return (output)
 
+# Multiply input and weights
 def net (inputs, weights):
     return (dot(inputs, weights))
 
+# Threshold function: Sigmoid
 def fnet(net):
     # Sigmoid function considering the inputs
     fnet = 1 / (1 + exp(-(net)))
-    #print ('saida',fnet)
     return (fnet)
 
 # Main programm
@@ -36,9 +39,11 @@ Neu1a = 2
 Nlay = 2
 Nout = 1
 weights =[]
+dweights = []
+function = []
 matrix = [[1,2],[3]]
 txlearning = 0.4
-function = []
+
 
 Nstart = int(round((Ninp + Nout) / 2 , 0))
 #Nneurons = matrix_gen (Nlay,Nstart)
@@ -51,7 +56,7 @@ inputs = array([2,1])
 output = array([2]).T
 random.seed(1)
 
-# Defining randomic weights by synapt connection numbers
+# Defining random weights by synapt connection numbers
 # weights = 2 * random.random(((len(inputs[0]), 2)) - 1)
 # weights = 2 * random.random((len(inputs[0]), Neu1a)) - 1
 weights = ([[0.5, 0.4], [-0.1, 0.3], [1, 0.01]])
@@ -68,6 +73,12 @@ for a in range(Nlay):
 print (weights, function)
 # Calculating the error
 e = (output - inputs) * fnet(out) * (1 - fnet(out))
+dweights.append(txlearning * e * function[0])
+print (dweights)
+e1 = e * weights[2] * function[0] * (1- function[0])
+print (e1)
+dweights.append(txlearning * e1 * inputs)
+print (txlearning, e1 , inputs)
 weights = txlearning * e * function
 
 print (e)
