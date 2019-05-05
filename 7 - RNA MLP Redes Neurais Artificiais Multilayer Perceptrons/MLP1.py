@@ -84,9 +84,10 @@ delta = output - inputslay[len(RNAlay)]
 
 for layer in range (len(RNAlay), 0, -1):
     #e[layer] = delta * fnet(netf[layer - 1]) * 1- fnet(netf[layer - 1])
-    e[layer] = delta * inputslay[layer] * 1 - inputslay[layer]
+    e[layer] = delta * inputslay[layer] * (1 - inputslay[layer])
+    print(layer, delta, inputslay[layer], e[layer], weights[layer])
     delta = e[layer] * weights [layer]
-    print (layer, delta, e[layer] , weights [layer])
+
 #, fnet(netf[layer]) , (1 - fnet(netf[layer])))
 print ('e',e)
 
