@@ -41,7 +41,7 @@ weights =[]     # Define weights as matrix of synaptic weights for all the neuro
 netf = []       # Define netf as matrix for the results of net funciotn
 dweights = []   # Define dweights as matrix for delta weights results of backpropagation
 inputslay = []  # Define inputslay as matrix for inputs in each layer
-e = [[],[],[]]          # Define e as matrix of error for each layer
+e = [[],[]]          # Define e as matrix of error for each layer
 RNAlay = [[1,2],[3]]
 txlearning = 0.4
 
@@ -84,16 +84,17 @@ delta = output - inputslay[len(RNAlay)]
 
 for layer in range (len(RNAlay), 0, -1):
     #e[layer] = delta * fnet(netf[layer - 1]) * 1- fnet(netf[layer - 1])
-    e[layer] = delta * inputslay[layer] * (1 - inputslay[layer])
-    print(layer, delta, inputslay[layer], e[layer], weights[layer])
-    delta = e[layer] * weights [layer]
+    e[layer-1] = delta * inputslay[layer] * (1 - inputslay[layer])
+    #print(layer, delta, inputslay[layer], e[layer-1], weights[layer])
+    delta = e[layer-1] * weights [layer]
 
 #, fnet(netf[layer]) , (1 - fnet(netf[layer])))
 print ('e',e)
 
 #e = (output - inputsl) * fnet(out) * (1 - fnet(out))
-#dweights.append(txlearning * e * function[0])
-#print (dweights)
+#for layer in range (len(e):
+dweights = txlearning * array(e) * #inputslay
+print (dweights)
 #e1 = e * weights[2] * function[0] * (1- function[0])
 #print (e1)
 #dweights.append(txlearning * e1 * inputs)
