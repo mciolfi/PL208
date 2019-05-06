@@ -36,7 +36,7 @@ def fnet(net):
 Ninp = 2
 Neu1a = 2
 Nout = 1
-RNAlay = [[1,2],[3]]
+RNAlay = [[1,2],[3,4]]
 learningrate = 0.4
 
 
@@ -57,7 +57,7 @@ random.seed(1)
 # weights = []  # Define weights as matrix of synaptic weights for all the neurons
 weights = ([[0.5, 0.4], [-0.1, 0.3], [1, 0.01]])
 
-for iteration in range(100):
+for iteration in range(10000):
 
     # Define and clear the matrix
     netf = []       # Define results of net function matrix
@@ -72,6 +72,7 @@ for iteration in range(100):
     # Calculing the neurons output for each layer
     for layer in range(len(RNAlay)):
         weightsl = []                                           # Get the weights of each layer
+        print(last, weights[0 + last]) , len(RNAlay[layer])
         [weightsl.append(weights[i + last]) for i in range(len(RNAlay[layer]))]
         last = len(RNAlay[layer])                               # Get the length to sum on next weights calculation
         netf.append(net(inputslay[layer], array(weightsl).T))   # Append on netf the net results
@@ -99,6 +100,6 @@ for iteration in range(100):
     # dweights.append([txlearning * e[0][0] * inputslay[0][0], txlearning * e[0][0] * inputslay[0][1]])
     # dweights.append(txlearning * e[0][1] * inputslay[0][0], txlearning * e[0][1] * inputslay[0][1])
     # dweights.append(txlearning * e[1][0] * inputslay[1][0], txlearning * e[1][0] * inputslay[1][1])
-    
+
     # Add to weight the delta weights resulted by the error on backpropagation
     weights = [[weights[i][j] + dweights[i][j] for j in range(len(weights[0]))] for i in range(len(weights))]
