@@ -93,8 +93,17 @@ print ('e',e)
 
 #e = (output - inputsl) * fnet(out) * (1 - fnet(out))
 #for layer in range (len(e):
-dweights = txlearning * array(e) * #inputslay
-print (dweights)
+del(inputslay[len(inputslay)-1])
+print ('input',inputslay)
+dweights = []
+#for i in range (6)
+    dweights.insert(txlearning * e[0][0] * inputslay[0][0])
+    dweights.insert(txlearning * e[0][0] * inputslay[0][1])
+    dweights.insert(txlearning * e[0][1] * inputslay[0][0])
+    dweights.insert(txlearning * e[0][1] * inputslay[0][1])
+    dweights.insert(txlearning * e[1][0] * inputslay[1][0])
+    dweights.insert(txlearning * e[1][0] * inputslay[1][1])
+print ('pesos',dweights)
 #e1 = e * weights[2] * function[0] * (1- function[0])
 #print (e1)
 #dweights.append(txlearning * e1 * inputs)
