@@ -28,8 +28,7 @@ def net (inputs, weights):
 
 # Threshold function: Sigmoid
 def fnet(net):
-    # Sigmoid function considering the inputs
-    fnet = 1 / (1 + exp(-(net)))
+    fnet = 1 / (1 + exp(-(net)))        # Sigmoid function considering the inputs
     return (fnet)
 
 # Main programm
@@ -37,13 +36,8 @@ def fnet(net):
 Ninp = 2
 Neu1a = 2
 Nout = 1
-weights =[]     # Define weights as matrix of synaptic weights for all the neurons
-netf = []       # Define netf as matrix for the results of net funciotn
-dweights = []   # Define dweights as matrix for delta weights results of backpropagation
-inputslay = []  # Define inputslay as matrix for inputs in each layer
-e = [[],[]]          # Define e as matrix of error for each layer
 RNAlay = [[1,2],[3]]
-txlearning = 0.4
+learningrate = 0.4
 
 
 Nstart = int(round((Ninp + Nout) / 2 , 0))
@@ -60,65 +54,51 @@ random.seed(1)
 # Defining random weights by synapt connection numbers
 # weights = 2 * random.random(((len(inputs[0]), 2)) - 1)
 # weights = 2 * random.random((len(inputs[0]), Neu1a)) - 1
+# weights = []  # Define weights as matrix of synaptic weights for all the neurons
 weights = ([[0.5, 0.4], [-0.1, 0.3], [1, 0.01]])
 
-# Define and clear inputs of each layer
-last = 0
-inputslay.append(inputs)
+for iteration in range(100):
 
-# Calculing the neurons output for each layer
-for layer in range(len(RNAlay)):
+    # Define and clear the matrix
+    netf = []       # Define results of net function matrix
+    dweights = []   # Define delta weights matrix results of backpropagation
+    inputslay = []  # Define inputs in each layer matrix
+    e = [[], []]    # Define error matrix for each layer
 
-    # Get the weights of each layer
-    weightsl = []
-    [weightsl.append(weights[i+last]) for i in range(len(RNAlay[layer]))]
-    last = len(RNAlay[layer])                                               # Get the length to sum on next weights calculation
+    # Define and clear inputs of each layer
+    last = 0
+    inputslay.append(inputs)
 
-    netf.append (net(inputslay[layer], array(weightsl).T))                  # Append on netf the net results
-    inputslay.append(fnet(netf[layer]))                                     # Append on matrix the neurons output
+    # Calculing the neurons output for each layer
+    for layer in range(len(RNAlay)):
+        weightsl = []                                           # Get the weights of each layer
+        [weightsl.append(weights[i + last]) for i in range(len(RNAlay[layer]))]
+        last = len(RNAlay[layer])                               # Get the length to sum on next weights calculation
+        netf.append(net(inputslay[layer], array(weightsl).T))   # Append on netf the net results
+        inputslay.append(fnet(netf[layer]))                     # Append on matrix the neurons output
 
-print (netf, inputslay)
+    # Calculating the error for each layer
+    delta = output - inputslay[len(RNAlay)]
+    for layer in range(len(RNAlay), 0, -1):
+        e[layer - 1] = delta * inputslay[layer] * (1 - inputslay[layer])
+        delta = e[layer - 1] * weights[layer]
 
-# Calculating the error for each layer
-delta = output - inputslay[len(RNAlay)]
+    # Show iteration number and the result of last neuron
+    print(iteration,inputslay[len(inputslay) - 1])
 
-for layer in range (len(RNAlay), 0, -1):
-    #e[layer] = delta * fnet(netf[layer - 1]) * 1- fnet(netf[layer - 1])
-    e[layer-1] = delta * inputslay[layer] * (1 - inputslay[layer])
-    #print(layer, delta, inputslay[layer], e[layer-1], weights[layer])
-    delta = e[layer-1] * weights [layer]
-
-#, fnet(netf[layer]) , (1 - fnet(netf[layer])))
-print ('e',e)
-
-#e = (output - inputsl) * fnet(out) * (1 - fnet(out))
-#for layer in range (len(e):
-del(inputslay[len(inputslay)-1])
-print ('input',inputslay)
-dweights = []
-#for i in range (6)
-    dweights.insert(txlearning * e[0][0] * inputslay[0][0])
-    dweights.insert(txlearning * e[0][0] * inputslay[0][1])
-    dweights.insert(txlearning * e[0][1] * inputslay[0][0])
-    dweights.insert(txlearning * e[0][1] * inputslay[0][1])
-    dweights.insert(txlearning * e[1][0] * inputslay[1][0])
-    dweights.insert(txlearning * e[1][0] * inputslay[1][1])
-print ('pesos',dweights)
-#e1 = e * weights[2] * function[0] * (1- function[0])
-#print (e1)
-#dweights.append(txlearning * e1 * inputs)
-#print (txlearning, e1 , inputs)
-#weights = txlearning * e * function
-
-#print (e)
-
-#for iteration in range(10000):
-#    output = 1 / (1 + exp(-(dot(training_set_inputs, synaptic_weights))))
-#    synaptic_weights += dot(training_set_inputs.T, (training_set_outputs - output) * output * (1 - output))
-#print (1 / (1 + exp(-(dot(array([1, 0, 0]), synaptic_weights)))))
-
-
-#fnet = 0
-#f_ativ = lambda x: 1.0 / (1 + np.power(np.e, -x))
-
-
+    del (inputslay[len(inputslay) - 1])     # Delete the last result of inputs matrix
+    dweights = []                           # Define and clean delta weights matrix
+    count = 0                               # Define a count as zero
+    for i in range(len(weights) - 1):
+        for j in range(len(weights[0])):
+            # Count iteration and add on delta weights matrix until the count number be the length of layers
+            count += 1
+            dweights.append([learningrate * e[i][j] * inputslay[i][0], learningrate * e[i][j] * inputslay[i][1]])
+            if count == len(RNAlay) + 1:
+                break
+    # dweights.append([txlearning * e[0][0] * inputslay[0][0], txlearning * e[0][0] * inputslay[0][1]])
+    # dweights.append(txlearning * e[0][1] * inputslay[0][0], txlearning * e[0][1] * inputslay[0][1])
+    # dweights.append(txlearning * e[1][0] * inputslay[1][0], txlearning * e[1][0] * inputslay[1][1])
+    
+    # Add to weight the delta weights resulted by the error on backpropagation
+    weights = [[weights[i][j] + dweights[i][j] for j in range(len(weights[0]))] for i in range(len(weights))]
