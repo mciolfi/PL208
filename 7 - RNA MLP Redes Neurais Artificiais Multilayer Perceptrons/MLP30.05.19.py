@@ -128,6 +128,8 @@ for iteration in range(10000):
     for layer in range(len(RNAlay)):
         weightsl = []                                           # Get the weights of each layer
         print(last, weights[0 + last], len(RNAlay[layer]), len(RNAlay))
+        for i in range(len(RNAlay[layer])):
+            print(weights[i + last])
         [weightsl.append(weights[i + last]) for i in range(len(RNAlay[layer]))]
         last = len(RNAlay[layer])                               # Get the length to sum on next weights calculation
         netf.append(net(inputslay[layer], array(weightsl).T))   # Append on netf the net results
