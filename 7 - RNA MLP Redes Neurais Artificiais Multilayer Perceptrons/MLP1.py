@@ -9,6 +9,21 @@ class Neuron(object):
         self.fnet = fnet                # Define type of function that represent the neuron function
 
 
+# Open dataset
+def arq(name, ndata, types):
+    import csv
+
+    listt = []  # Define listt as matrix
+    with open(name, newline='') as csvfile:  # csv module will detect new lines
+        if types == ' ':  text = csv.reader(csvfile, delimiter=' ')  # classify by space
+        if types == ',':  text = csv.reader(csvfile, delimiter=',')  # classify by comma
+        if types == '\t': text = csv.reader(csvfile, delimiter='\t') # classify by tab
+        for line in text:
+            for t in range(len(line) - ndata): line.remove('')  # Removes zeros inside data
+            listt.append(line)  # Define listt as the data inside file
+    return (listt)
+
+
 def matrix_gen (n_lines, n_columns):
     return [[((j+1)+i*n_columns) for j in range(n_columns)] for i in range(n_lines)]
 
@@ -48,7 +63,7 @@ Nstart = int(round((Ninp + Nout) / 2 , 0))
 # inputs = array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
 inputs = array([2,1])
 #training_set_outputs = array([[0, 1, 1, 0]]).T
-output = array([2]).T
+output = array([1]).T
 random.seed(1)
 
 # Defining random weights by synapt connection numbers
@@ -72,7 +87,7 @@ for iteration in range(10000):
     # Calculing the neurons output for each layer
     for layer in range(len(RNAlay)):
         weightsl = []                                           # Get the weights of each layer
-        print(last, weights[0 + last]) , len(RNAlay[layer])
+        print(last, weights[0 + last]), len(RNAlay[layer])
         [weightsl.append(weights[i + last]) for i in range(len(RNAlay[layer]))]
         last = len(RNAlay[layer])                               # Get the length to sum on next weights calculation
         netf.append(net(inputslay[layer], array(weightsl).T))   # Append on netf the net results
