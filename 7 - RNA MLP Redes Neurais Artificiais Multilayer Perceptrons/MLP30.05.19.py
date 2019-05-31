@@ -127,8 +127,8 @@ for iteration in range(10000):
     # Calculing the neurons output for each layer
     for layer in range(len(RNAlay)):
         weightsl = []                                           # Get the weights of each layer
-        #print(last, weights[0 + last], len(RNAlay[layer]))
-        [weightsl.append(weights[i + last]) for i in range(len(RNAlay[layer])-2)]
+        print(last, weights[0 + last], len(RNAlay[layer]), len(RNAlay))
+        [weightsl.append(weights[i + last]) for i in range(len(RNAlay[layer]))]
         last = len(RNAlay[layer])                               # Get the length to sum on next weights calculation
         netf.append(net(inputslay[layer], array(weightsl).T))   # Append on netf the net results
         inputslay.append(fnet(netf[layer]))                     # Append on matrix the neurons output
