@@ -9,124 +9,98 @@ __username__ = 'mciolfi'
 __description__ = 'MLPerceptron using Iris dataset'
 __status__ = 'Development'
 
-import numpy as np
-from numpy import exp, array, random, dot
+import csv                                                              # Module to read csv file type
+from numpy import exp, array, random, dot                               # Load functions
 
-# Open dataset
+
+# Open dataset as csv file using the file name, columns number and type of delimiter between the datas
 def arq(name, ndata, types):
-    import csv
+    listt = []                                                          # Define listt as matrix
+    with open(name, newline='') as csvfile:                             # csv module will detect new lines
+        if types == ' ':  text = csv.reader(csvfile, delimiter=' ')     # classify by space
+        if types == ',':  text = csv.reader(csvfile, delimiter=',')     # classify by comma
+        if types == '\t': text = csv.reader(csvfile, delimiter='\t')    # classify by tab
+        for line in text:
+            for t in range(len(line) - ndata): line.remove('')          # Removes zeros inside data
+            listt.append(line)                                          # Define listt as the data inside file
+    return (listt)                                                      # Returns with the data inside file
 
-    listt = []  # Define listt as matrix
-    with open(name, newline='') as csvfile:  # csv module will detect new lines
-        if types == ' ':  text = csv.reader(csvfile, delimiter=' ')  # classify by space
-        if types == ',':  text = csv.reader(csvfile, delimiter=',')  # classify by comma
-        if types == '\t': text = csv.reader(csvfile, delimiter='\t') # classify by tab
-        for line in text: #range(4): #
-            for t in range(len(line) - ndata): line.remove('')  # Removes zeros inside data
-            listt.append(line)  # Define listt as the data inside file
-    return (listt)
-
-# Matrix generation
-def matrix_gen (n_lines, n_columns):
-    return [[((j+1)+i*n_columns) for j in range(n_columns)] for i in range(n_lines)]
-
+# Weights Matrix generation using the inputs number and the RNA layout
+def random_weights(Ninp, RNAlay):
+    weights = []                                                        # Define weights as matrix
+    ncols = [Ninp] * (len(RNAlay))                                      # Matrix w. synapse number for 1st layer
+    for i in range(1, len(RNAlay)):
+        ncols[i] = len(RNAlay[i - 1])                                   # Synapse number definition for next layers
+    for i in ncols:
+        for j in range(i):
+            weights.append([(2 *random.random()-1)] * i)                # Random weights
+    return weights,ncols                                                # Returns with Weights and synapse per layer
 
 # Multiply input and weights
 def net(inputs, weights):
-    return (dot(inputs, weights))
+    return dot(inputs, weights)                                         # Returns matrix multiplication results
 
 # Threshold function: Sigmoid
 def fnet(net):
-    fnet = 1 / (1 + exp(-(net)))        # Sigmoid function considering the inputs
-    return (fnet)
+    fnet = 1 / (1 + exp(-(net)))                                        # Sigmoid function considering the inputs
+    return fnet                                                         # Returns Sigmoid results
 
-# Perceptron with 4 inputs (4 Neuron) and 1 output (1 Neuron)
-def perceptron(inputs, training_set_outputs, learningrate):
-    weights = random.random((len(inputs[0]), 1))                        # Define the initial weight as random
-    weightsold = [[0] for a in range(len(inputs[0]))]                   # Define matrix to save old weights value
-    iteration = 0                                                       # Define variable iteration
-    # Learning iteraction until 10000 or when the weights stops to change
-    while iteration < 10000 and \
-            max(abs(weightsold - weights))[0] > 0.001:
-        iteration += 1                                                  # Count iteration number
-        output = fnet(net(inputs, weights))                             # Output = sigmoid thresold
-        #print (output)
-        for i in range(len(weights)): weightsold[i][0] = weights[i][0]  # Save old weights
-        print (training_set_outputs, output)
-        weights += learningrate * dot(inputs.T, (training_set_outputs - output))  # Weights update
-    print('#Iteration =', iteration)
-    print('Weights =', weights.T)
-    print('Expected value =', training_set_outputs.T)
-    final_test = fnet(net(inputs, weights)).T == training_set_outputs.T # Check if the inputs plus weights = outputs
-    if min(final_test[0]):
-        print('Final value =', fnet(net(inputs, weights)).T, 'Learned!\n')  # If all results are true then has been learned
-    else:
-        print('Final value =', fnet(net(inputs, weights)).T, 'NOT Learned!\n')
-
-# Prepare the inputs and training outputs matrix
+# Prepare the inputs and training outputs matrix using file name, columns number and tab type
 def dataconv(file, cols, tab):
-    listt = array(arq(file, cols, tab))                                 # Define listt as the data inside the file
+    # Define inputs and training_set_outputs as matrix
     inputs = []
     training_set_outputs = []
-    for cont in range(len(listt)):
-        # Define one neuron for each classification: Iris-setosa = [1,0,0] ,Iris-versicolor = [0,1,0], ,Iris-virginica = [0,0,1]
-        if listt[cont][cols-1] == 'Iris-setosa':
-            inputs.append([float(listt[cont][i]) for i in range(cols-1)])
+    listt = array(arq(file, cols, tab))                                     # Define listt as the data inside the file
+    # Check all file lines and assign one neuron for each classification:
+    # Iris-setosa = [1,0,0] ,Iris-versicolor = [0,1,0], ,Iris-virginica = [0,0,1]
+    for count in range(len(listt)):
+        inputs.append([float(listt[count][i]) for i in range(cols - 1)])    # Add inputs at matrix
+        if listt[count][cols-1] == 'Iris-setosa':                           # Last column = Setosa
             training_set_outputs.append([1,0,0])
-        if listt[cont][cols-1] == 'Iris-versicolor':
-            inputs.append([float(listt[cont][i]) for i in range(cols-1)])
+        if listt[count][cols-1] == 'Iris-versicolor':                       # Last column = Versicolor
             training_set_outputs.append([0,1,0])
-        if listt[cont][cols-1] == 'Iris-virginica':
-            inputs.append([float(listt[cont][i]) for i in range(cols-1)])
+        if listt[count][cols-1] == 'Iris-virginica':                        # Last column = Virginica
             training_set_outputs.append([0,0,1])
     inputs = array(inputs)                                                  # Define inputs as matrix to transpose after
-    training_set_outputs = array(training_set_outputs)                      # Define outputs as matrix to transpose after
-    return (inputs, training_set_outputs)
+    training_set_outputs = array(training_set_outputs)                      # Define outputs as matrix to transpose aft.
+    return (inputs, training_set_outputs)                                   # Returns inputs and training ser outputs
+
 
 # Main programm
-inputs, training_set_outputs = dataconv('iris.data.txt', 5, ',')
-print (inputs)
-#print('Iris')
-learningrate = 0.4  # Define learning rate
-#perceptron(inputs, training_set_outputs, learningrate)  # Run perceptron
+inputs, training_set_outputs = dataconv('iris.data1.txt', 5, ',')           # Gets the inputs and training outputs
+learningrate = 0.4                                                          # Define learning rate
 
+# Define the RNA layout
 Ninp = 4
-Neu1a = 4
 Nout = 3
 RNAlay = [[1,2,3,4],[5,6,7,8],[9,10,11]]
-
 Nstart = int(round((Ninp + Nout) / 2 , 0))
-#Nneurons = matrix_gen (Nlay,Nstart)
-#print (Nneurons)
 
-# Defining random weights by synapt connection numbers
+# Defining random weights by synapse connection numbers
 random.seed(1)
-weights = 2 * random.random((len(RNAlay), len(inputs[0]))) - 1
-#print(weights,'test')
+weights,ncols = array(random_weights(Ninp, RNAlay))                         # Gets Weights and synapse connections
 
-
+# Create a looping process to calcule feed-forward
 for iteration in range(10000):
-
     # Define and clear the matrices
-    netf = []       # Define results of net function matrix
-    dweights = []   # Define delta weights matrix results of backpropagation
-    inputslay = []  # Define inputs in each layer matrix
-    e = [[], []]    # Define error matrix for each layer
+    netf = []                                                               # Define results of net function matrix
+    dweights = []                                                           # Delta weights results of backpropagation
+    inputslay = []                                                          # Define inputs in each layer matrix
+    e = []                                                                  # Define error matrix for each layer
 
     # Define and clear inputs of each layer
-    last = 0
-    inputslay.append(inputs)
+    last = 0                                                                # Value step definition
+    inputslay.append(inputs[0])                                             # Define inputs matrix
 
     # Calculing the neurons output for each layer
     for layer in range(len(RNAlay)):
-        weightsl = []                                           # Get the weights of each layer
-        print(last, weights[0 + last], len(RNAlay[layer]), len(RNAlay))
-        for i in range(len(RNAlay[layer])):
-            print(weights[i + last])
-        [weightsl.append(weights[i + last]) for i in range(len(RNAlay[layer]))]
-        last = len(RNAlay[layer])                               # Get the length to sum on next weights calculation
-        netf.append(net(inputslay[layer], array(weightsl).T))   # Append on netf the net results
-        inputslay.append(fnet(netf[layer]))                     # Append on matrix the neurons output
+        weightsl = []                                                       # Define weights of each layer
+        [weightsl.append(weights[i + last]) for i in range(ncols[layer])]   # Get the weights of each layer
+        last += len(RNAlay[layer])                                          # Get step to next weights calculation
+        netf.append(net(inputslay[layer], array(weightsl).T))               # Append on netf the net results
+        inputslay.append(fnet(netf[layer]))                                 # Append on matrix the neurons output
+    inputslay.append(training_set_outputs[0])
+    print('a',inputslay,'b')
 
     # Calculating the error for each layer
     delta = output - inputslay[len(RNAlay)]
@@ -135,7 +109,7 @@ for iteration in range(10000):
         delta = e[layer - 1] * weights[layer]
 
     # Show iteration number and the result of last neuron
-    print(iteration,inputslay[len(inputslay) - 1])
+    # print(iteration,inputslay[len(inputslay) - 1])
 
     del (inputslay[len(inputslay) - 1])     # Delete the last result of inputs matrix
     dweights = []                           # Define and clean delta weights matrix
