@@ -31,9 +31,9 @@ def random_weights(Ninp, RNAlay):
     ncols = [Ninp] * (len(RNAlay))                                      # Matrix w. synapse number for 1st layer
     for i in range(1, len(RNAlay)):
         ncols[i] = len(RNAlay[i - 1])                                   # Synapse number definition for next layers
-    for i in ncols:
-        for j in range(i):
-            weights.append([(2 *random.random()-1)] * i)                # Random weights
+    for i in range(len(RNAlay)):
+        for j in range(ncols[i]):
+            weights.append([(2 *random.random()-1)] * len(RNAlay[i]))   # Random weights
     return weights,ncols                                                # Returns with Weights and synapse per layer
 
 # Multiply input and weights
@@ -79,6 +79,7 @@ Nstart = int(round((Ninp + Nout) / 2 , 0))
 # Defining random weights by synapse connection numbers
 random.seed(1)
 weights,ncols = array(random_weights(Ninp, RNAlay))                         # Gets Weights and synapse connections
+#print(weights)
 
 # Create a looping process to calcule feed-forward
 for iteration in range(10000):
@@ -91,15 +92,17 @@ for iteration in range(10000):
     # Define and clear inputs of each layer
     last = 0                                                                # Value step definition
     inputslay.append(inputs[0])                                             # Define inputs matrix
-
+    print (weights[9],'\n')
     # Calculing the neurons output for each layer
     for layer in range(len(RNAlay)):
         weightsl = []                                                       # Define weights of each layer
         [weightsl.append(weights[i + last]) for i in range(ncols[layer])]   # Get the weights of each layer
+        print(last,inputslay[layer],'w',array(weightsl).T)
+
         last += len(RNAlay[layer])                                          # Get step to next weights calculation
         netf.append(net(inputslay[layer], array(weightsl).T))               # Append on netf the net results
         inputslay.append(fnet(netf[layer]))                                 # Append on matrix the neurons output
-    inputslay.append(training_set_outputs[0])
+    #inputslay.append(training_set_outputs[0])                               # Include output
     print('a',inputslay,'b')
 
     # Calculating the error for each layer
