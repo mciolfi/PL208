@@ -36,11 +36,11 @@ def random_weights(Ninp, RNAlay):
             weights.append([(2 *random.random()-1)] * len(RNAlay[i]))   # Random weights
     return weights,ncols                                                # Returns with Weights and synapse per layer
 
-# Multiply input and weights
+# Define net function as multiplication input and weights
 def net(inputs, weights):
     return dot(inputs, weights)                                         # Returns matrix multiplication results
 
-# Threshold function: Sigmoid
+# Define fnet function as threshold function: Sigmoid
 def fnet(net):
     fnet = 1 / (1 + exp(-(net)))                                        # Sigmoid function considering the inputs
     return fnet                                                         # Returns Sigmoid results
@@ -48,8 +48,8 @@ def fnet(net):
 # Prepare the inputs and training outputs matrix using file name, columns number and tab type
 def dataconv(file, cols, tab):
     # Define inputs and training_set_outputs as matrix
-    inputs = []
-    training_set_outputs = []
+    inputs = []                                                             # Define inputs as matrix
+    training_set_outputs = []                                               # Define training_set_outputs as matrix
     listt = array(arq(file, cols, tab))                                     # Define listt as the data inside the file
     # Check all file lines and assign one neuron for each classification:
     # Iris-setosa = [1,0,0] ,Iris-versicolor = [0,1,0], ,Iris-virginica = [0,0,1]
