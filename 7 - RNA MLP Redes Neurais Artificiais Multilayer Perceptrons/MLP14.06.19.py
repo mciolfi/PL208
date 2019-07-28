@@ -17,12 +17,12 @@ from numpy import exp, array, random, dot                               # Load f
 def arq(name, ndata, types):
     listt = []                                                          # Define listt as matrix
     with open(name, newline='') as csvfile:                             # csv module will detect new lines
-        if types == ' ':  text = csv.reader(csvfile, delimiter=' ')     # classify by space
-        if types == ',':  text = csv.reader(csvfile, delimiter=',')     # classify by comma
-        if types == '\t': text = csv.reader(csvfile, delimiter='\t')    # classify by tab
+        if types == ' ':  text = csv.reader(csvfile, delimiter=' ')     # delimiter by space
+        if types == ',':  text = csv.reader(csvfile, delimiter=',')     # delimiter by comma
+        if types == '\t': text = csv.reader(csvfile, delimiter='\t')    # delimiter by tab
         for line in text:
-            for t in range(len(line) - ndata): line.remove('')          # Removes zeros inside data
-            listt.append(line)                                          # Define listt as the data inside file
+            for remove in range(len(line) - ndata): line.remove('')     # Removes zeros inside data
+            listt.append(line)                                          # Add file data inside listt
     return (listt)                                                      # Returns with the data inside file
 
 # Weights Matrix generation using the inputs number and the RNA layout
