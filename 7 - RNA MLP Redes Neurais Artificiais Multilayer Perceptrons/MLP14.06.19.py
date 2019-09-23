@@ -71,8 +71,7 @@ inputs, training_set_outputs = dataconv('iris.data1.txt', 5, ',')           # Ge
 learningrate = 0.4                                                          # Define learning rate
 
 # Define the RNA layout
-Ninp = 4
-Nout = 3
+Ninp, Nout = 4, 3
 RNAlay = [[1,2,3,4],[5,6,7,8],[9,10,11]]
 Nstart = int(round((Ninp + Nout) / 2 , 0))
 
@@ -83,11 +82,8 @@ weights,ncols = array(random_weights(Ninp, RNAlay))                         # Ge
 
 # Create a looping process to calcule feed-forward
 for iteration in range(10000):
-    # Define and clear the matrices
-    netf = []                                                               # Define results of net function matrix
-    dweights = []                                                           # Delta weights results of backpropagation
-    inputslay = []                                                          # Define inputs in each layer matrix
-    e = []                                                                  # Define error matrix for each layer
+    # Define and clear the matrices (net function, weights of backpropagation, inputs each layer, error)
+    netf, dweights, inputslay, e = [], [], [], []
 
     # Define and clear inputs of each layer
     last = 0                                                                # Value step definition
