@@ -89,17 +89,3 @@ for layer in range(nLayer + 1):
     if layer < nLayer:
         inpt.append([nNeu[i].output for i in range(len(ANNLayout[0]))])
     print(inpt)
-    #inpt.append([nNeu[1].output, nNeu[2].output])
-    #print (layer, inpt)
-
-#for neu in range(1,3):
-#    inpt.append(nNeu[neu].output)
-#print(inpt)
-#newLayer()
-#nNeu.append([])
-#nNeu[3] = neuron('3', inputs, weights[2], 0)
-#print(nNeu[3].output)
-#nNeu[2] = neuron('2', inpt, weights[1], 0)
-
-#print (n[1].weight)
-#print (net(inpt, weights))
