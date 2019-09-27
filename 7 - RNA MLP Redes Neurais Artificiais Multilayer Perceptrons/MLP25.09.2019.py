@@ -65,11 +65,11 @@ def NNAV(nInpt, nOutput, nLayer):
 #def feedBackward()
 
 # Input data
-nInpt, nOutput, nLayer, nNeu, inputs = 2, 1, 1, [[]], []
-ANNLayout = [[1, 2], [3]]
+nInpt, nOutput, nLayer, nNeu, inputs = 2, 1, 2, [[]], []
+ANNLayout = [[1, 2], [3, 4], [5]]
 inpt = [[2, 1]]
 outpt = [0]
-weights = [[0.5, 0.4], [-0.1, 0.3], [1, 0.01]]
+weights = [[0.5, 0.4], [-0.1, 0.3], [1, 0.01], [1, 1], [1, 1]]
 archtetureType = 'MLP'
 learningRate = 0.4
 
@@ -82,20 +82,23 @@ learningRate = 0.4
 # Function set properties for each Neuron 
 #a = NNAv(nInpt, nOutput, nLayer)
 for layer in range(nLayer + 1):
-    for neu in range(1, len(ANNLayout[layer]) + 1):
+    for neu in range(len(ANNLayout[layer])):
         nNeu.append([])
-        nNeu[layer + 1][neu] = neuron(layer + 1, neu, inpt[layer], weights[layer + neu - 1], 'Sig')
-        print(layer + 1, neu, nNeu[layer + 1][neu].output)
-    inpt.append([nNeu[1].output, nNeu[2].output])
-    print (layer,inpt)
+        nNeu[len(nNeu) - 2] = neuron(layer, neu, inpt[layer], weights[len(nNeu) - 2], 'Sig')
+        print(len(nNeu) - 2, layer, neu, nNeu[len(nNeu) - 2].output)
+    if layer < nLayer:
+        inpt.append([nNeu[i].output for i in range(len(ANNLayout[0]))])
+    print(inpt)
+    #inpt.append([nNeu[1].output, nNeu[2].output])
+    #print (layer, inpt)
 
-for neu in range(1,3):
-    inpt.append(nNeu[neu].output)
-print(inpt)
-newLayer()
-nNeu.append([])
-nNeu[3] = neuron('3', inputs, weights[2], 0)
-print(nNeu[3].output)
+#for neu in range(1,3):
+#    inpt.append(nNeu[neu].output)
+#print(inpt)
+#newLayer()
+#nNeu.append([])
+#nNeu[3] = neuron('3', inputs, weights[2], 0)
+#print(nNeu[3].output)
 #nNeu[2] = neuron('2', inpt, weights[1], 0)
 
 #print (n[1].weight)
