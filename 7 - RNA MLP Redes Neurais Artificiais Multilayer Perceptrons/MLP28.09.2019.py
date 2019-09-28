@@ -58,6 +58,7 @@ def NNAV(nInpt, nOutput, nLayer):
 # Function back propagation
 def backPropagation(nNeu, nLayer, ANNLayout, inpt, outpt, weights):
     feedForward(nNeu, nLayer, ANNLayout, inpt, weights)
+    feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
 
 # Function Feed-Forward
 def feedForward(nNeu, nLayer, ANNLayout, inpt, weights):
@@ -67,30 +68,28 @@ def feedForward(nNeu, nLayer, ANNLayout, inpt, weights):
             nNeu[len(nNeu) - 2] = neuron(layer, neu, inpt[layer], weights[len(nNeu) - 2], 'Sig')
             print(len(nNeu) - 2, layer, neu, nNeu[len(nNeu) - 2].output)
         if layer < nLayer:
-            print (len(nNeu) - 1, len(ANNLayout[layer]))
+            #print (len(nNeu) - 1, len(ANNLayout[layer]))
             inpt.append([nNeu[i].output for i in range(len(nNeu) - len(ANNLayout[layer]) - 1, len(nNeu) - 1)])
         print(inpt)
 
 # Function Feed-Backward
 def feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights):
     dWeights = [[weights[i][j] for j in range(len(weights[i]))] for i in range(len(weights))]
-    print(dWeights)
-    for layer in range(nLayer, 0, -1):
-        for neu in range(len(ANNLayout[layer])):
-            
-            nNeu[len(nNeu) - 2] = neuron(layer, neu, inpt[layer], weights[len(nNeu) - 2], 'Sig')
-            print(len(nNeu) - 2, layer, neu, nNeu[len(nNeu) - 2].output)
-        if layer < nLayer:
-            print (len(nNeu) - 1, len(ANNLayout[layer]))
-            inpt.append([nNeu[i].output for i in range(len(nNeu) - len(ANNLayout[layer]) - 1, len(nNeu) - 1)])
-        print(inpt)
     
+    e = outpt - nNeu[len(nNeu) - 2].output
+    print(e, nNeu[len(nNeu) - 2].output)
+    for layer in range(nLayer, -1 , -1):
+        for neu in range(len(ANNLayout[layer]) - 1, -1, -1):
+            print(layer, neu)
+            dWeights[layer][neu] = 1   
+    print(dWeights)
+
 # Input data
-nInpt, nOutput, nLayer, nNeu, inputs = 2, 1, 2, [[]], []
-ANNLayout = [[1, 2], [3, 4], [5]]
+nInpt, nOutput, nLayer, nNeu, inputs = 2, 1, 1, [[]], []
+ANNLayout = [[1, 2], [3]]
 inpt = [[2, 1]]
 outpt = [0]
-weights = [[0.5, 0.4], [-0.1, 0.3], [1, 0.01], [1, 0.01], [0.01, 1]]
+weights = [[0.5, 0.4], [-0.1, 0.3], [1, 0.01]]
 archtetureType = 'MLP'
 learningRate = 0.4
 
@@ -98,8 +97,8 @@ learningRate = 0.4
 # Main program
 # exploreNNA()
 # generateWeights()
-#backPropagation(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
-feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
+backPropagation(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
+#feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
 
 # Function set properties for each Neuron 
 #a = NNAv(nInpt, nOutput, nLayer)
