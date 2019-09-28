@@ -29,7 +29,7 @@ def func(net, actFunc):
 # Function to enable the neuron
 def dfunc(net, actFunc):
     if actFunc == 'Sig':
-        fnet = fnet * (1 - net)
+        fnet = net * (1 - net)
     elif actFunc == 'Tan':
         fnet = 1 - (tanh(net)) ** 2
     return(fnet)
@@ -56,9 +56,10 @@ def NNAV(nInpt, nOutput, nLayer):
 # deltaW = n * (error)
 
 # Function back propagation
-def backPropagation(nNeu, nLayer, ANNLayout, inpt, outpt, weights):
-    feedForward(nNeu, nLayer, ANNLayout, inpt, weights)
-    feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
+def backPropagation(nNeu, nLayer, ANNLayout, inpt, outpt, weights, learningRate):
+    print(neuron.output)
+    #feedForward(nNeu, nLayer, ANNLayout, inpt, weights)
+    #feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights, learningRate)
 
 # Function Feed-Forward
 def feedForward(nNeu, nLayer, ANNLayout, inpt, weights):
@@ -73,11 +74,11 @@ def feedForward(nNeu, nLayer, ANNLayout, inpt, weights):
         print(inpt)
 
 # Function Feed-Backward
-def feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights):
+def feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights, learningRate):
     dWeights = [[weights[i][j] for j in range(len(weights[i]))] for i in range(len(weights))]
     
-    e = (outpt - nNeu[len(nNeu) - 2].output) * nNeu[3].output
-    print(e, nNeu[len(nNeu) - 2].output)
+    e = (outpt - nNeu[len(nNeu) - 2].output) * dFunc(nNeu[2].output
+    print(e, nNeu[len(nNeu) - 2].output, len(nNeu) - 2)
     for layer in range(nLayer, -1 , -1):
         for neu in range(len(ANNLayout[layer]) - 1, -1, -1):
             print(layer, neu)
@@ -97,7 +98,7 @@ learningRate = 0.4
 # Main program
 # exploreNNA()
 # generateWeights()
-backPropagation(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
+backPropagation(nNeu, nLayer, ANNLayout, inpt, outpt, weights, learningRate)
 #feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
 
 # Function set properties for each Neuron 
