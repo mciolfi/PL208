@@ -27,9 +27,10 @@ def func(net, actFunc):
     return(fnet)
 
 # Function to enable the neuron
-def dfunc(net, actFunc):
+def dFunc(net, actFunc):
     if actFunc == 'Sig':
         fnet = net * (1 - net)
+        print(func(net, actFunc))
     elif actFunc == 'Tan':
         fnet = 1 - (tanh(net)) ** 2
     return(fnet)
@@ -57,39 +58,40 @@ def NNAV(nInpt, nOutput, nLayer):
 
 # Function back propagation
 def backPropagation(nNeu, nLayer, ANNLayout, inpt, outpt, weights, learningRate):
-    print(neuron.output)
-    #feedForward(nNeu, nLayer, ANNLayout, inpt, weights)
-    #feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights, learningRate)
+    feedForward(nNeu, nLayer, ANNLayout, inpt, weights)
+    #print(len(nNeu), nNeu[2].output)
+    feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights, learningRate)
 
 # Function Feed-Forward
 def feedForward(nNeu, nLayer, ANNLayout, inpt, weights):
     for layer in range(nLayer + 1):
         for neu in range(len(ANNLayout[layer])):
             nNeu.append([])
-            nNeu[len(nNeu) - 2] = neuron(layer, neu, inpt[layer], weights[len(nNeu) - 2], 'Sig')
-            print(len(nNeu) - 2, layer, neu, nNeu[len(nNeu) - 2].output)
-        if layer < nLayer:
+            nNeu[len(nNeu) - 1] = neuron(layer, neu, inpt[layer], weights[len(nNeu) - 1], 'Sig')
+            print(len(nNeu) - 1, layer, neu, nNeu[len(nNeu) - 1].output)
+        #if layer < nLayer:
             #print (len(nNeu) - 1, len(ANNLayout[layer]))
-            inpt.append([nNeu[i].output for i in range(len(nNeu) - len(ANNLayout[layer]) - 1, len(nNeu) - 1)])
-        print(inpt)
+        inpt.append([nNeu[i].output for i in range(len(nNeu) - len(ANNLayout[layer]) , len(nNeu))])
+    print(inpt)
 
 # Function Feed-Backward
 def feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights, learningRate):
     dWeights = [[weights[i][j] for j in range(len(weights[i]))] for i in range(len(weights))]
-    
-    e = (outpt - nNeu[len(nNeu) - 2].output) * dFunc(nNeu[2].output
-    print(e, nNeu[len(nNeu) - 2].output, len(nNeu) - 2)
-    for layer in range(nLayer, -1 , -1):
-        for neu in range(len(ANNLayout[layer]) - 1, -1, -1):
-            print(layer, neu)
-            dWeights[layer][neu] = 1   
-    print(dWeights)
+    e = (outpt - nNeu[len(nNeu) - 1].output) * dFunc(net(nNeu[len(nNeu) - 1].input, nNeu[len(nNeu) - 1].weight), 'Sig')
+    print (e, outpt, - nNeu[len(nNeu) - 1].output, net(nNeu[len(nNeu) - 1].input, nNeu[len(nNeu) - 1].weight),  dFunc(net(nNeu[len(nNeu) - 1].input, nNeu[len(nNeu) - 1].weight), 'Sig'))
+    #net(inpt, weight)
+    #print(e, nNeu[len(nNeu) - 1].output, len(nNeu) - 1)
+    #for layer in range(nLayer, -1 , -1):
+        #for neu in range(len(ANNLayout[layer]) - 1, -1, -1):
+            #print(layer, neu)
+            #dWeights[layer][neu] = 1   
+    #print(dWeights)
 
 # Input data
-nInpt, nOutput, nLayer, nNeu, inputs = 2, 1, 1, [[]], []
+nInpt, nOutput, nLayer, nNeu, inputs = 2, 1, 1, [], []
 ANNLayout = [[1, 2], [3]]
 inpt = [[2, 1]]
-outpt = [0]
+outpt = [2]
 weights = [[0.5, 0.4], [-0.1, 0.3], [1, 0.01]]
 archtetureType = 'MLP'
 learningRate = 0.4
