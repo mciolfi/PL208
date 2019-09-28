@@ -76,7 +76,7 @@ def feedForward(nNeu, nLayer, ANNLayout, inpt, weights):
 def feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights):
     dWeights = [[weights[i][j] for j in range(len(weights[i]))] for i in range(len(weights))]
     
-    e = outpt - nNeu[len(nNeu) - 2].output
+    e = (outpt - nNeu[len(nNeu) - 2].output) * nNeu[3].output
     print(e, nNeu[len(nNeu) - 2].output)
     for layer in range(nLayer, -1 , -1):
         for neu in range(len(ANNLayout[layer]) - 1, -1, -1):
