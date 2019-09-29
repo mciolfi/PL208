@@ -30,7 +30,6 @@ def func(net, actFunc):
 def dFunc(net, actFunc):
     if actFunc == 'Sig':
         fnet = net * (1 - net)
-        print(func(net, actFunc))
     elif actFunc == 'Tan':
         fnet = 1 - (tanh(net)) ** 2
     return(fnet)
@@ -78,7 +77,14 @@ def feedForward(nNeu, nLayer, ANNLayout, inpt, weights):
 def feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights, learningRate):
     dWeights = [[weights[i][j] for j in range(len(weights[i]))] for i in range(len(weights))]
     e = (outpt - nNeu[len(nNeu) - 1].output) * dFunc(net(nNeu[len(nNeu) - 1].input, nNeu[len(nNeu) - 1].weight), 'Sig')
-    print (e, outpt, - nNeu[len(nNeu) - 1].output, net(nNeu[len(nNeu) - 1].input, nNeu[len(nNeu) - 1].weight),  dFunc(net(nNeu[len(nNeu) - 1].input, nNeu[len(nNeu) - 1].weight), 'Sig'))
+    e2 = (e - nNeu[len(nNeu) - 1].output) * dFunc(net(nNeu[len(nNeu) - 1].input, nNeu[len(nNeu) - 1].weight), 'Sig')
+    print(weights)
+    for neu in range(len(ANNLayout[len(nNeu) - 2]) + 1):
+        delta = learningRate * e * nNeu[neu].output
+        print (float(delta))
+        weights[len(nNeu) - 1][neu] -= float(delta)
+    print(weights)
+    #print (delta, e, outpt, - nNeu[len(nNeu) - 1].output, net(nNeu[len(nNeu) - 1].input, nNeu[len(nNeu) - 1].weight),  dFunc(net(nNeu[len(nNeu) - 1].input, nNeu[len(nNeu) - 1].weight), 'Sig'))
     #net(inpt, weight)
     #print(e, nNeu[len(nNeu) - 1].output, len(nNeu) - 1)
     #for layer in range(nLayer, -1 , -1):
