@@ -37,7 +37,7 @@ def dFunc(net, actFunc):
 # Function to record inputs by layer
 def newLayer():
     for i in range(1,3):   
-        inpt.append(nNeu[i].output)
+        inpt.append(neu[i].output)
 
 def NNAV(nInpt, nOutput, nLayer):
     for i in range(nLayer):
