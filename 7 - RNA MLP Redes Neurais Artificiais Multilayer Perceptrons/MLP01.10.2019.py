@@ -13,7 +13,19 @@ class neuron:
         self.actFunc = actFunc
         self.output = func(net(inpt, weight), actFunc)
 
-
+        
+# Function to define the Neural network type
+def archtype(archtetureType, inpt, weights):
+    if archtetureType == 'RNN':
+        for n in range(len(inpt[0])):
+            inputs.append(inpt[0][n])
+        for n in range(len(weights[0])-len(inpt[0])): 
+            inputs.append(0)
+        inputs = [inputs]
+    else:
+        inputs = inpt
+    return inputs
+        
 # Function to multiply inputs and weights
 def net(inpt, weight):
     print(inpt, weight)
@@ -25,15 +37,15 @@ def func(net, actFunc):
         fnet = 1 / (1 + exp(-(net)))
     elif actFunc == 'Tan':
         fnet = tanh(net)
-    return(fnet)
+    return fnet
 
-# Function to enable the neuron
+# Derivation Function to enable the neuron
 def dFunc(net, actFunc):
     if actFunc == 'Sig':
         fnet = net * (1 - net)
     elif actFunc == 'Tan':
         fnet = 1 - (tanh(net)) ** 2
-    return(fnet)
+    return fnet
 
 # Function to record inputs by layer
 def newLayer():
@@ -57,21 +69,18 @@ def NNAV(nInpt, nOutput, nLayer):
 # deltaW = n * (error)
 
 # Function back propagation
-def backPropagation(archtetureType, neu, nLayer, ANNLayout, inpt, outpt, weights, learningRate):
-    feedForward(archtetureType, neu, nLayer, ANNLayout, inpt, weights)
+def backPropagation(archtetureType, neu, nLayer, ANNLayout, nInputs, inpt, outpt, weights, learningRate):
+    feedForward(archtetureType, neu, nLayer, ANNLayout, nInputs, inpt, weights)
     #print(len(nNeu), nNeu[2].output)
     feedBackward(archtetureType, neu, nLayer, ANNLayout, inpt, outpt, weights, learningRate)
 
 # Function Feed-Forward
-def feedForward(archtetureType, neu, nLayer, ANNLayout, inpt, weights):
+def feedForward(archtetureType, neu, nLayer, ANNLayout, nInputs, inpt, weights):
     for layer in range(nLayer + 1):
         for countNeu in range(len(ANNLayout[layer])):
-            if archtetureType == 'MLP':
-                if len(neu) > 0:
-                    print (layer, len(inpt[layer])
-                    inpt[layer][2] = neu[len(neu) - 1].output
-                else:
-                    inpt[layer].append(0)
+            if archtetureType == 'RNN':
+                if countNeu > 0:
+                    inpt[layer][nInputs + len(neu) - 1] = neu[len(neu) - 1].output
             neu.append([])
             neu[len(neu) - 1] = neuron(layer, countNeu, inpt[layer], weights[len(neu) - 1], 'Sig')
             print(len(neu) - 1, layer, countNeu, neu[len(neu) - 1].output)
@@ -99,24 +108,25 @@ def feedBackward(neu, nLayer, ANNLayout, inpt, outpt, weights, learningRate):
     #print(dWeights)
 
 # Input data
-nInpt, nOutput, nLayer, neu, inputs = 2, 1, 2, [], []
-ANNLayout = [[1, 2], [3, 4], [5]]
+nInput, nOutput, nLayer, neu, inputs = 2, 1, 2, [], []
+ANNLayout = [[1, 2, 3], [4, 5, 6], [7]]
 inpt = [[2, 1]]
 outpt = [0]
-# Current structure define 2 weights for each neuron
+# Define the ANN achteture type
+archtetureType = 'RNN'
 # MLP = Each neuron receives inputs from previous layer and give output to the next layer
+# weights = [[0.5, 0.4], [-0.1, 0.3], [1, 0.01], [0.5, 0.4], [-0.1, 0.3]]
 # RNN = Each neuron receives inputs from previous layer and other neurons from same layer and give output to the next layer
-#weights = [[0.5, 0.4], [-0.1, 0.3], [1, 0.01], [0.5, 0.4], [-0.1, 0.3]]
-weights = [[0.5, 0.4, 0.3], [-0.1, 0.3, 0.2], [1, 0.01, 0.1], [0.5, 0.4, 0.3], [-0.1, 0.3, 0.2]]
-archtetureType = 'MLP'
+weights = [[0.5, 0.4, 0.3, 0.4], [-0.1, 0.3, 0.2, -0.3], [1, 0.01, 0.1, 1], [0.5, 0.4, 0.3, 0.5], [-0.1, 0.3, 0.2, 0.7]]
 learningRate = 0.4
 
 
 # Main program
+inputs = archtype(archtetureType, inpt, weights)
 # exploreNNA()
 # generateWeights()
 # backPropagation(archtetureType, neu, nLayer, ANNLayout, inpt, outpt, weights, learningRate)
-feedForward(archtetureType, neu, nLayer, ANNLayout, inpt, weights)
+feedForward(archtetureType, neu, nLayer, ANNLayout, nInput, inputs, weights)
 #feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
 
 # Function set properties for each Neuron 
