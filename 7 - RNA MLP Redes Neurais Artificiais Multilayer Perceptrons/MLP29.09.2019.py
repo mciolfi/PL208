@@ -18,7 +18,7 @@ class neuron:
 def net(inpt, weight):
     return dot(array(weight).T, inpt)
 
-# Function to enable the neuron
+# Threshould function to enable the neuron
 def func(net, actFunc):
     if actFunc == 'Sig':
         fnet = 1 / (1 + exp(-(net)))

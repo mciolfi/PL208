@@ -16,6 +16,7 @@ class neuron:
 
 # Function to multiply inputs and weights
 def net(inpt, weight):
+    print(inpt, weight)
     return dot(array(weight).T, inpt)
 
 # Function to enable the neuron
@@ -65,14 +66,11 @@ def backPropagation(archtetureType, neu, nLayer, ANNLayout, inpt, outpt, weights
 def feedForward(archtetureType, neu, nLayer, ANNLayout, inpt, weights):
     for layer in range(nLayer + 1):
         for countNeu in range(len(ANNLayout[layer])):
-            if archtetureType = 'MLP':
-                inpt[layer] = inpt[layer] + neu[len(neu) - 1].output
-                print inpt[layer]
+            if archtetureType == 'MLP' and len(neu) > 0:
+                inpt[layer].append(neu[len(neu) - 1].output)
             neu.append([])
             neu[len(neu) - 1] = neuron(layer, countNeu, inpt[layer], weights[len(neu) - 1], 'Sig')
             print(len(neu) - 1, layer, countNeu, neu[len(neu) - 1].output)
-        #if layer < nLayer:
-            #print (len(nNeu) - 1, len(ANNLayout[layer]))
         inpt.append([neu[i].output for i in range(len(neu) - len(ANNLayout[layer]) , len(neu))])
     print(inpt)
 
@@ -104,8 +102,8 @@ outpt = [0]
 # Current structure define 2 weights for each neuron
 # MLP = Each neuron receives inputs from previous layer and give output to the next layer
 # RNN = Each neuron receives inputs from previous layer and other neurons from same layer and give output to the next layer
-weights = [[0.5, 0.4], [-0.1, 0.3], [1, 0.01], [0.5, 0.4], [-0.1, 0.3]]
-# weights = [[0.5, 0.4, 0.3], [-0.1, 0.3, 0.2], [1, 0.01, 0.1], [0.5, 0.4, 0.3], [-0.1, 0.3, 0.2]]
+#weights = [[0.5, 0.4], [-0.1, 0.3], [1, 0.01], [0.5, 0.4], [-0.1, 0.3]]
+weights = [[0.5, 0.4, 0.3], [-0.1, 0.3, 0.2], [1, 0.01, 0.1], [0.5, 0.4, 0.3], [-0.1, 0.3, 0.2]]
 archtetureType = 'MLP'
 learningRate = 0.4
 
@@ -113,7 +111,8 @@ learningRate = 0.4
 # Main program
 # exploreNNA()
 # generateWeights()
-backPropagation(archtetureType, neu, nLayer, ANNLayout, inpt, outpt, weights, learningRate)
+# backPropagation(archtetureType, neu, nLayer, ANNLayout, inpt, outpt, weights, learningRate)
+feedForward(archtetureType, neu, nLayer, ANNLayout, inpt, weights)
 #feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
 
 # Function set properties for each Neuron 
