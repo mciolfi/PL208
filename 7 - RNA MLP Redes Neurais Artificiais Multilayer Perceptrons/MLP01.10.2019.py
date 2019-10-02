@@ -66,8 +66,12 @@ def backPropagation(archtetureType, neu, nLayer, ANNLayout, inpt, outpt, weights
 def feedForward(archtetureType, neu, nLayer, ANNLayout, inpt, weights):
     for layer in range(nLayer + 1):
         for countNeu in range(len(ANNLayout[layer])):
-            if archtetureType == 'MLP' and len(neu) > 0:
-                inpt[layer].append(neu[len(neu) - 1].output)
+            if archtetureType == 'MLP':
+                if len(neu) > 0:
+                    print (layer, len(inpt[layer])
+                    inpt[layer][2] = neu[len(neu) - 1].output
+                else:
+                    inpt[layer].append(0)
             neu.append([])
             neu[len(neu) - 1] = neuron(layer, countNeu, inpt[layer], weights[len(neu) - 1], 'Sig')
             print(len(neu) - 1, layer, countNeu, neu[len(neu) - 1].output)
