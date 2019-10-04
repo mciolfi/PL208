@@ -15,18 +15,18 @@ class neuron:
 
         
 # Function to define the Neural network type
-def archtype(archtetureType, inpt, weights):
-    print ('before', inpt)
+def archtype(archtetureType, neu, inpt, weights):
     inputs = []
     if archtetureType == 'RNN':
-        for n in range(len(inpt[len(inpt) - 1])):
-            inputs.append(inpt[len(inpt) - 1][n])
-        for n in range(len(weights[len(inpt) - 1])-len(inpt[len(inpt) - 1])): 
-            inputs.append(0)
-        inputs = [inputs]
+        if len(inpt) > 0:
+            [inputs.append(inpt[n]) for n in range(len(inpt)-1)]
+        inputs2 = []
+        [inputs2.append(inpt[len(inpt) - 1][n]) for n in range(len(inpt[len(inpt) - 1]))]
+        [inputs2.append(0) for n in range(len(weights[len(neu)])-len(inpt[len(inpt) - 1]))]
+        inputs.append(inputs2)
     else:
         inputs = inpt
-    print('after', inputs)
+    print('input', inputs)
     return inputs
         
 # Function to multiply inputs and weights
@@ -80,20 +80,19 @@ def backPropagation(archtetureType, neu, nLayer, ANNLayout, nInputs, inpt, outpt
 # Function Feed-Forward
 def feedForward(archtetureType, neu, nLayer, ANNLayout, nInputs, inpt, weights):
      for layer in range(nLayer + 1):
-        inputs = archtype(archtetureType, inpt, weights)
+        print('teste1', inpt)
+        inputs = archtype(archtetureType, neu, inpt, weights)
         for countNeu in range(len(ANNLayout[layer])):
-            print('count', len(ANNLayout[layer]))
             if archtetureType == 'RNN':
                 if countNeu > 0:
                     inputs[layer][nInputs + len(neu) - 1] = neu[len(neu) - 1].output
             neu.append([])
-            print('data', layer, countNeu, inputs, weights[len(neu) - 1], inpt)
+            print('data', layer, countNeu, len(neu) - 1, inputs, weights[len(neu) - 1])
             neu[len(neu) - 1] = neuron(layer, countNeu, inputs[layer], weights[len(neu) - 1], 'Sig')
             print('Neuron', len(neu) - 1, '=', neu[len(neu) - 1].output)
         inputs.append([neu[i].output for i in range(len(neu) - len(ANNLayout[layer]) , len(neu))])
-        print('inputs', inputs)
         inpt = inputs
-        print('inpt', inpt)
+        print('input', inputs)
 
 # Function Feed-Backward
 def feedBackward(neu, nLayer, ANNLayout, inpt, outpt, weights, learningRate):
