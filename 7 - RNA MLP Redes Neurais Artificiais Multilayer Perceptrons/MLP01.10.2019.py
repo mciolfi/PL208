@@ -38,8 +38,19 @@ def net(inpt, weight):
 def func(net, actFunc):
     if actFunc == 'Sig':
         fnet = 1 / (1 + exp(-(net)))
+    elif actFunc == 'Step':
+         if net < 0:
+            fnet = 0
+        else:
+            fnet = 1
     elif actFunc == 'Tan':
         fnet = tanh(net)
+        # 2 / (1 + exp(-(2 * net)))
+    elif actFunc == 'ReLu':
+        if net < 0:
+            fnet = 0
+        else:
+            fnet = net
     return fnet
 
 # Derivation Function to enable the neuron
@@ -48,6 +59,8 @@ def dFunc(net, actFunc):
         fnet = net * (1 - net)
     elif actFunc == 'Tan':
         fnet = 1 - (tanh(net)) ** 2
+    elif actFunc == 'Tan':
+        fnet = 1 - (tanh(net)) ** 2  
     return fnet
 
 # Function to record inputs by layer
