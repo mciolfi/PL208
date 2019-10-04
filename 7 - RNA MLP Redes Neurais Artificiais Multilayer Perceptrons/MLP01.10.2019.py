@@ -16,19 +16,22 @@ class neuron:
         
 # Function to define the Neural network type
 def archtype(archtetureType, inpt, weights):
+    print ('before', inpt)
+    inputs = []
     if archtetureType == 'RNN':
-        for n in range(len(inpt[0])):
-            inputs.append(inpt[0][n])
-        for n in range(len(weights[0])-len(inpt[0])): 
+        for n in range(len(inpt[len(inpt) - 1])):
+            inputs.append(inpt[len(inpt) - 1][n])
+        for n in range(len(weights[len(inpt) - 1])-len(inpt[len(inpt) - 1])): 
             inputs.append(0)
         inputs = [inputs]
     else:
         inputs = inpt
+    print('after', inputs)
     return inputs
         
 # Function to multiply inputs and weights
 def net(inpt, weight):
-    print(inpt, weight)
+    print('mult', inpt, weight)
     return dot(array(weight).T, inpt)
 
 # Function to enable the neuron
@@ -76,16 +79,21 @@ def backPropagation(archtetureType, neu, nLayer, ANNLayout, nInputs, inpt, outpt
 
 # Function Feed-Forward
 def feedForward(archtetureType, neu, nLayer, ANNLayout, nInputs, inpt, weights):
-    for layer in range(nLayer + 1):
+     for layer in range(nLayer + 1):
+        inputs = archtype(archtetureType, inpt, weights)
         for countNeu in range(len(ANNLayout[layer])):
+            print('count', len(ANNLayout[layer]))
             if archtetureType == 'RNN':
                 if countNeu > 0:
-                    inpt[layer][nInputs + len(neu) - 1] = neu[len(neu) - 1].output
+                    inputs[layer][nInputs + len(neu) - 1] = neu[len(neu) - 1].output
             neu.append([])
-            neu[len(neu) - 1] = neuron(layer, countNeu, inpt[layer], weights[len(neu) - 1], 'Sig')
-            print(len(neu) - 1, layer, countNeu, neu[len(neu) - 1].output)
-        inpt.append([neu[i].output for i in range(len(neu) - len(ANNLayout[layer]) , len(neu))])
-    print(inpt)
+            print('data', layer, countNeu, inputs, weights[len(neu) - 1], inpt)
+            neu[len(neu) - 1] = neuron(layer, countNeu, inputs[layer], weights[len(neu) - 1], 'Sig')
+            print('Neuron', len(neu) - 1, '=', neu[len(neu) - 1].output)
+        inputs.append([neu[i].output for i in range(len(neu) - len(ANNLayout[layer]) , len(neu))])
+        print('inputs', inputs)
+        inpt = inputs
+        print('inpt', inpt)
 
 # Function Feed-Backward
 def feedBackward(neu, nLayer, ANNLayout, inpt, outpt, weights, learningRate):
@@ -117,16 +125,16 @@ archtetureType = 'RNN'
 # MLP = Each neuron receives inputs from previous layer and give output to the next layer
 # weights = [[0.5, 0.4], [-0.1, 0.3], [1, 0.01], [0.5, 0.4], [-0.1, 0.3]]
 # RNN = Each neuron receives inputs from previous layer and other neurons from same layer and give output to the next layer
-weights = [[0.5, 0.4, 0.3, 0.4], [-0.1, 0.3, 0.2, -0.3], [1, 0.01, 0.1, 1], [0.5, 0.4, 0.3, 0.5], [-0.1, 0.3, 0.2, 0.7]]
+weights = [[0.5, 0.4, 0.3, 0.4], [-0.1, 0.3, 0.2, -0.3], [1, 0.01, 0.1, 1], [0.5, 0.4, 0.3, 0.5, 0.1], [-0.1, 0.3, 0.2, 0.7], [-0.1, 0.3, 0.2, -0.3], [1, 0.01, 0.1, 1]]
 learningRate = 0.4
 
 
 # Main program
-inputs = archtype(archtetureType, inpt, weights)
+# inputs = archtype(archtetureType, inpt, inputs, weights)
 # exploreNNA()
 # generateWeights()
 # backPropagation(archtetureType, neu, nLayer, ANNLayout, inpt, outpt, weights, learningRate)
-feedForward(archtetureType, neu, nLayer, ANNLayout, nInput, inputs, weights)
+feedForward(archtetureType, neu, nLayer, ANNLayout, nInput, inpt, weights)
 #feedBackward(nNeu, nLayer, ANNLayout, inpt, outpt, weights)
 
 # Function set properties for each Neuron 
