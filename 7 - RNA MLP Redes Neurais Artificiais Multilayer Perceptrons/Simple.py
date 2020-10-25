@@ -1,7 +1,11 @@
+import random
+import numpy as np
+
 # Programa princial
 
 # Define o numero de entradas
-nInput, nTotal = 4, 4
+nInput = 6
+nTotal = nInput
 
 # Define a quantidade de layers
 nLayer = 2
@@ -21,6 +25,7 @@ if nInput >= ((nInput + nOutput) / (nLayer + 2)) * nLayer:
 else:
     nLay = 0
     print('Nok')
+
 for lay in range(nLayer):
     nTotal = int(nTotal - nLay)
     nNeuron.append(nTotal)
@@ -33,4 +38,8 @@ print('M =')
 [print(i) for i in M]
 
 # Define os pesos iniciais
-
+weights = []
+[[weights.append(j) for j in range(i)] for i in nNeuron]
+M = [[0] * 5 for i in range(2)]
+print(weights, M)
+print(np.random.random((2, 2)))
